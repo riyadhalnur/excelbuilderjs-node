@@ -1,0 +1,27 @@
+{
+  "name": "excelbuilderjs-node",
+  "version": "0.0.1",
+  "description": "https://github.com/riyadhalnur/excelbuilderjs-node",
+  "main": "index.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": "https://github.com/riyadhalnur/excelbuilderjs-node",
+  "homepage": "https://github.com/riyadhalnur/excelbuilderjs-node",
+  "keywords": [
+    "excel",
+    "xlsx",
+    "export"
+  ],
+  "author": "Riyadh Al Nur <riyadhalnur@verticalaxisbd.com>",
+  "contributors": {
+    "name": "AKM Zahiduzzaman",
+    "email": "zahid@newscred.com"
+  },
+  "license": "GPL v3.0",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "jshint": "~2.5.x"
+  }
+}

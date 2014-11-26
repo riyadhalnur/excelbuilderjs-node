@@ -1,0 +1,25 @@
+{
+  "curly": true,
+  "eqnull": true,
+  "eqeqeq": true,
+  "undef": true,
+  "unused": true,
+  "strict": true,
+  "camelcase": true,
+  "es3": true,
+  "forin": true,
+  "immed": true,
+  "indent": 2,
+  "latedef": true,
+  "newcap": true,
+  "noempty": true,
+  "nonbsp": true,
+  "quot": "single",
+  "globals": {
+      "jQuery": true,
+      "define": true,
+      "require": true,
+      "window": true,
+      "document": true
+  }
+}

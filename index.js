@@ -26,9 +26,9 @@ module.exports = {
     workbook.generateFilesAsync({
       success: function (files) {
         var worker = new Worker();
-        worker.addEventListener('message', function(event, data) {
-          if(event.data.status == 'done') {
-              options.success(event.data.data);
+        worker.addEventListener('message', function (event, data) {
+          if(event.data.status === 'done') {
+            options.success(event.data.data);
           }
         });
         worker.postMessage({
@@ -62,7 +62,7 @@ module.exports = {
     });
 
     return zip.generate(_.defaults(options || {}, {
-      type: "base64"
+      type: 'base64'
     }));
   }
 };

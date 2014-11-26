@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('underscore');
 var util = require('./util');
 
 /**
@@ -78,7 +77,6 @@ TwoCellAnchor.prototype.toXML = function (xmlDoc, content) {
   to.appendChild(toColOff);
   to.appendChild(toRow);
   to.appendChild(toRowOff);
-  
   
   root.appendChild(from);
   root.appendChild(to);

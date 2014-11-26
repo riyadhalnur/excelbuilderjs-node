@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('underscore');
 var AbsoluteAnchor = require('./AbsoluteAnchor');
 var OneCellAnchor = require('./OneCellAnchor');
 var TwoCellAnchor = require('./TwoCellAnchor');
@@ -21,7 +20,7 @@ var Drawing = function () {
 Drawing.prototype.createAnchor = function (type, config) {
   config = config || {};
   config.drawing = this;
-  
+
   switch(type) {
     case 'absoluteAnchor': 
       this.anchor = new AbsoluteAnchor(config);

@@ -14,12 +14,7 @@
   "newcap": true,
   "noempty": true,
   "nonbsp": true,
-  "quot": "single",
-  "globals": {
-      "jQuery": true,
-      "define": true,
-      "require": true,
-      "window": true,
-      "document": true
-  }
+  "quotmark": "single",
+  "globalstrict": false,
+  "node": true
 }

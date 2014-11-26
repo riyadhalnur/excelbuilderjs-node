@@ -86,8 +86,6 @@ Picture.prototype.toXML = function (xmlDoc) {
   ]);
   shapeProperties.appendChild(presetGeometry);
   
-  
-  
   pictureNode.appendChild(shapeProperties);
 
   return this.anchor.toXML(xmlDoc, pictureNode);    

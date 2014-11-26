@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('underscore');
-var util = require('./util');
+var util = require('../util');
 var Picture = require('./Picture');
 
 /**

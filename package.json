@@ -7,6 +7,9 @@
     "start": "node demo/app.js",
     "test": "mocha test/tests.js"
   },
+  "engines": {
+    "node": ">=0.10"
+  },
   "repository": "https://github.com/riyadhalnur/excelbuilderjs-node",
   "homepage": "https://github.com/riyadhalnur/excelbuilderjs-node",
   "keywords": [

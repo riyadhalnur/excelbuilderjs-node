@@ -4,7 +4,8 @@
   "description": "https://github.com/riyadhalnur/excelbuilderjs-node",
   "main": "index.js",
   "scripts": {
-    "test": ""
+    "start": "node demo/app.js",
+    "test": "mocha test/tests.js"
   },
   "repository": "https://github.com/riyadhalnur/excelbuilderjs-node",
   "homepage": "https://github.com/riyadhalnur/excelbuilderjs-node",
@@ -28,6 +29,9 @@
   },
   "devDependencies": {
     "jshint": "~2.5.x",
-    "underscore": "^1.7.0"
+    "underscore": "^1.7.0",
+    "express": "~3.x",
+    "mocha": "^2.0.x",
+    "should": "^4.3.x"
   }
 }

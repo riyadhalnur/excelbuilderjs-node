@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "jshint": "~2.5.x",
-    "lodash": "^2.4.1",
     "underscore": "^1.7.0"
   }
 }

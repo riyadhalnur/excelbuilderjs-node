@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/riyadhalnur/excelbuilderjs-node.svg)](https://travis-ci.org/riyadhalnur/excelbuilderjs-node)
+
 excelbuilderjs-node
 ===================
 

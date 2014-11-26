@@ -11,17 +11,24 @@
   "keywords": [
     "excel",
     "xlsx",
-    "export"
+    "export",
+    "node"
   ],
+  "bugs": {
+    "url": "https://github.com/riyadhalnur/excelbuilderjs-node/issues"
+  },
   "author": "Riyadh Al Nur <riyadhalnur@verticalaxisbd.com>",
   "contributors": {
     "name": "AKM Zahiduzzaman",
     "email": "zahid@newscred.com"
   },
-  "license": "GPL v3.0",
+  "license": "GPLv3",
   "dependencies": {
+    "jszip": "~2.4.x"
   },
   "devDependencies": {
-    "jshint": "~2.5.x"
+    "jshint": "~2.5.x",
+    "lodash": "^2.4.1",
+    "underscore": "^1.7.0"
   }
 }

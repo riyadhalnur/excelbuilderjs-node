@@ -234,7 +234,7 @@ Workbook.prototype._prepareFilesForPackaging = function (files) {
       if (value instanceof XMLDOM){
         files[key] = value.toString();
       } else {
-        files[key] = value.xml || new window.XMLSerializer().serializeToString(value);
+        files[key] = value.xml || '';
       }
       var content = files[key].replace(/xmlns=""/g, '');
       content = content.replace(/NS[\d]+:/g, '');
@@ -267,6 +267,4 @@ Workbook.prototype.generateFiles = function () {
   return files;
 };
 
-module.exports = {
-  Workbook: Workbook
-};
+module.exports = Workbook;

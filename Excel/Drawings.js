@@ -38,6 +38,4 @@ Drawings.prototype.toXML = function () {
   return doc;
 };
 
-module.exports = {
-  Drawings: Drawings
-};
+module.exports = Drawings;

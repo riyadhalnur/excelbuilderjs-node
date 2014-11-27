@@ -43,6 +43,4 @@ sharedStrings.prototype.toXML = function () {
   return doc;
 };
 
-module.exports = {
-  sharedStrings: sharedStrings
-};
+module.exports = sharedStrings;

@@ -153,6 +153,4 @@ Table.prototype.addAutoFilter = function (startRef, endRef) {
   this.autoFilter = [startRef, endRef];
 };
 
-module.exports = {
-  Table: Table
-};
+module.exports = Table;

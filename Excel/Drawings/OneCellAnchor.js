@@ -72,6 +72,4 @@ OneCellAnchor.prototype.toXML = function (xmlDoc, content) {
   return root;
 };
 
-module.exports = {
-  OneCellAnchor: OneCellAnchor
-};
+module.exports = OneCellAnchor;

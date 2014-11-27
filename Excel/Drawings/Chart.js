@@ -2,6 +2,4 @@
 
 var Chart = function () {};
 
-module.exports = {
-  Chart: Chart
-};
+module.exports = Chart;

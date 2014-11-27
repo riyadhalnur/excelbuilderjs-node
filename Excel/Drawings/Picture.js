@@ -91,6 +91,4 @@ Picture.prototype.toXML = function (xmlDoc) {
   return this.anchor.toXML(xmlDoc, pictureNode);    
 };
 
-module.exports = {
-  Picture: Picture
-};
+module.exports = Picture;

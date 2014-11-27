@@ -87,6 +87,4 @@ TwoCellAnchor.prototype.toXML = function (xmlDoc, content) {
   return root;
 };
 
-module.exports = {
-  TwoCellAnchor: TwoCellAnchor
-};
+module.exports = TwoCellAnchor;

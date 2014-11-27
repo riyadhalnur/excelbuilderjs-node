@@ -2,6 +2,4 @@
 
 var Paths = function () {};
 
-module.exports = {
-  Paths: Paths
-};
+module.exports = Paths;

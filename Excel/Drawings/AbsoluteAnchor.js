@@ -51,6 +51,4 @@ AbsoluteAnchor.prototype.toXML = function (xmlDoc, content) {
   return root;
 };
 
-module.exports = {
-  AbsoluteAnchor: AbsoluteAnchor
-};
+module.exports = AbsoluteAnchor;

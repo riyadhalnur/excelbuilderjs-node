@@ -36,6 +36,4 @@ Drawing.prototype.createAnchor = function (type, config) {
   return this.anchor;
 };
 
-module.exports = {
-  Drawing: Drawing
-};
+module.exports = Drawing;

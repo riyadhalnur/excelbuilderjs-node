@@ -52,6 +52,4 @@ RelationshipManager.prototype.toXML = function () {
   return doc;
 };
 
-module.exports = {
-  RelationshipManager: RelationshipManager
-};
+module.exports = RelationshipManager;

@@ -341,7 +341,7 @@ StyleSheet.prototype.exportMasterCellFormats = function (doc) {
   return cellFormats;
 };
 
-StyleSheet.prototype.exportMasterCellStyle = function (doc) {
+StyleSheet.prototype.exportMasterCellStyles = function (doc) {
   var records = util.createElement(doc, 'cellStyleXfs', [
       ['count', this.masterCellStyles.length]
     ]);
@@ -608,7 +608,7 @@ StyleSheet.prototype.exportCellStyles = function (doc) {
   return cellStyles;
 };
 
-StyleSheet.prototype.exportDifferentialStyle = function (doc) {
+StyleSheet.prototype.exportDifferentialStyles = function (doc) {
   var dxfs = doc.createElement('dxfs');
   dxfs.setAttribute('count', this.differentialStyles.length);
 
@@ -699,6 +699,4 @@ StyleSheet.prototype.toXML = function () {
   return doc;
 };
 
-module.exports = {
-  StyleSheet: StyleSheet
-};
+module.exports = StyleSheet;

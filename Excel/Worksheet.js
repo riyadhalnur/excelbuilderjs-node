@@ -367,7 +367,7 @@ Worksheet.prototype.exportColumns = function (doc) {
   return cols;
 };
 
-Worksheet.prototype.exportPageSettings = function () {
+Worksheet.prototype.exportPageSettings = function (doc, worksheet) {
   if (this._orientation) {
     worksheet.appendChild(util.createElement(doc, 'pageSetup', [
       ['orientation', this._orientation]
@@ -395,6 +395,4 @@ Worksheet.prototype.setColumnFormats = function (columnFormats) {
   this.columnFormats = columnFormats;
 };
 
-module.exports = {
-  Worksheet: Worksheet
-};
+module.exports = Worksheet;

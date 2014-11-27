@@ -133,6 +133,4 @@ XMLDOM.XMLNode.prototype.cloneNode = function () {
   return new XMLDOM.XMLNode(this.toJSON());
 };
 
-module.exports = {
-  XMLDOM: XMLDOM
-};
+module.exports = XMLDOM;

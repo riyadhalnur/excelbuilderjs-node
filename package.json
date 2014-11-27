@@ -28,7 +28,8 @@
   },
   "license": "GPLv3",
   "dependencies": {
-    "jszip": "~2.4.x"
+    "jszip": "~2.4.x",
+    "xmldom": "~0.1.19"
   },
   "devDependencies": {
     "jshint": "~2.5.x",

@@ -41,6 +41,7 @@ app.get('/', function(req, res) {
   ]);
 
   var result = excel.createFile(basicReport.prepare());
+  console.log(result);
 
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64');
   res.setHeader('Content-Disposition', 'attachment; filename=' + 'demo.xlsx');

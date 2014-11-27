@@ -7,6 +7,7 @@ var SharedStrings = require('./SharedStrings');
 var RelationshipManager = require('./RelationshipManager');
 var Paths = require('./Paths');
 var XMLDOM = require('./XMLDOM');
+var XMLSerializer = require('xmldom').XMLSerializer;
 var util = require('./util');
 
 var Workbook = function (config) {
@@ -234,7 +235,7 @@ Workbook.prototype._prepareFilesForPackaging = function (files) {
       if (value instanceof XMLDOM){
         files[key] = value.toString();
       } else {
-        files[key] = value.xml || '';
+        files[key] = value.xml || new XMLSerializer().serializeToString(value);
       }
       var content = files[key].replace(/xmlns=""/g, '');
       content = content.replace(/NS[\d]+:/g, '');

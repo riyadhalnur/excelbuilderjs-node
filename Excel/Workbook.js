@@ -50,6 +50,7 @@ Workbook.prototype.addDrawings = function (drawings) {
 Workbook.prototype.addMedia = function (type, fileName, fileData, contentType) {
   var fileNamePieces = fileName.split('.');
   var extension = fileNamePieces[fileNamePieces.length - 1];
+  
   if(!contentType) {
     switch(extension.toLowerCase()) {
       case 'jpeg':

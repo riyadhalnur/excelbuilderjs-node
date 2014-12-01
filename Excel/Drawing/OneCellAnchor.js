@@ -27,6 +27,7 @@ var OneCellAnchor = function (config) {
 OneCellAnchor.prototype.setPos = function (x, y, xOff, yOff) {
   this.x = x;
   this.y = y;
+
   if(xOff !== undefined) {
     this.xOff = xOff;
   }
@@ -66,6 +67,7 @@ OneCellAnchor.prototype.toXML = function (xmlDoc, content) {
   root.appendChild(content);
 
   root.appendChild(util.createElement(xmlDoc, 'xdr:clientData'));
+  
   return root;
 };
 module.exports = OneCellAnchor;

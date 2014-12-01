@@ -1,14 +1,20 @@
 'use strict';
 
 var express = require('express');
-var excel = require('../index.js');
-var BasicReport = require('../Template/BasicReport');
-
 var app = express();
+var path = require('path');
+
+var Excel = require('../index.js');
+var Table = require('../Excel/Table');
+var Drawings = require('../Excel/Drawings');
+var Picture = require('../Excel/Drawing/Picture');
+var Positioning = require('../Excel/Positioning');
+var util = require('../Excel/util');
+var BasicReport = require('../Template/BasicReport');
 
 app.get('/', function(req, res) {
 
-  var demoWorkbook = excel.createWorkbook();
+  var demoWorkbook = Excel.createWorkbook();
   var stylesheet = demoWorkbook.getStyleSheet();
 
   var themeColor = stylesheet.createFormat({
@@ -43,7 +49,7 @@ app.get('/', function(req, res) {
 
   demoWorkbook.addWorksheet(demoList);
 
-  var result = excel.createFile(demoWorkbook);
+  var result = Excel.createFile(demoWorkbook);
   var data = new Buffer(result, 'base64');
 
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64');
@@ -79,7 +85,7 @@ app.get('/table', function(req, res) {
   basicReport.setData(worksheetData);
   basicReport.setColumns(columns);
 
-  var result = excel.createFile(basicReport.prepare());
+  var result = Excel.createFile(basicReport.prepare());
 
   var base64Out = new Buffer(result, 'base64');
 
@@ -88,6 +94,66 @@ app.get('/table', function(req, res) {
 
   res.end(base64Out);
 });
+
+app.get('/image', function(req, res) {
+  var catWorkbook = Excel.createWorkbook();
+  var catList = catWorkbook.createWorksheet({name: 'Cat List'});
+  var stylesheet = catWorkbook.getStyleSheet();
+
+  var drawings = new Drawings();
+  var catImageData = util.base64_encode(path.resolve(__dirname, 'grumpycat.jpg'));
+
+  var picRef = catWorkbook.addMedia('image', 'grumpycat.jpg', catImageData);
+
+  var catPicture1 = new Picture();
+  catPicture1.createAnchor('twoCellAnchor', {
+    from: {
+      x: 0,
+      y: 0
+    },
+    to: {
+      x: 3,
+      y: 3
+    }
+  });
+
+  catPicture1.setMedia(picRef);
+  drawings.addDrawing(catPicture1);
+
+  var catPicture2 = new Picture();
+  catPicture2.createAnchor('absoluteAnchor', {
+    x: Positioning.pixelsToEMUs(300),
+    y: Positioning.pixelsToEMUs(300),
+    width: Positioning.pixelsToEMUs(300),
+    height: Positioning.pixelsToEMUs(300)
+  });
+
+  catPicture2.setMedia(picRef);
+  drawings.addDrawing(catPicture2);
+
+  var catPicture3 = new Picture();
+  catPicture3.createAnchor('oneCellAnchor', {
+    x: 1,
+    y: 4,
+    width: Positioning.pixelsToEMUs(300),
+    height: Positioning.pixelsToEMUs(300)
+  });
+
+  catPicture3.setMedia(picRef);
+  drawings.addDrawing(catPicture3);
+
+  catList.addDrawings(drawings);
+  catWorkbook.addDrawings(drawings);
+  catWorkbook.addWorksheet(catList);
+
+  console.log(catWorkbook.generateFiles());
+  var data = Excel.createFile(catWorkbook);
+
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64');
+  res.setHeader('Content-Disposition', 'attachment; filename=' + 'demo.xlsx');
+  res.end(data);
+});
+
 
 app.listen(3000);
 console.log('Listening on port 3000');

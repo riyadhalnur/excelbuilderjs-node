@@ -1,6 +1,7 @@
 'use strict';
 
 var XMLDOM = require('./XMLDOM');
+var fs = require('fs');
 
 module.exports = {
   _idSpaces: {},
@@ -74,6 +75,17 @@ module.exports = {
     this.LETTER_REFS[x] = string;
     return string.concat(y);
   },
+
+  base64_encode: function (file) {
+    var bitmap = fs.readFileSync(file);
+    return new Buffer(bitmap).toString('base64');
+  },
+
+  base64_decode: function (base64str, file) {
+    var bitmap = new Buffer(base64str, 'base64');
+    fs.writeFileSync(file, bitmap);
+  },
+
 
   schemas: {
     'worksheet': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet',

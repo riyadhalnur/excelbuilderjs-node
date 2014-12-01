@@ -23,24 +23,24 @@ module.exports = {
    * @param {String} options.requireJsPath (Optional) The path to requirejs. Will use the id 'requirejs' to look up the script if not specified.
    */
   createFileAsync: function (workbook, options) {
-    workbook.generateFilesAsync({
-      success: function (files) {
-        var worker = new Worker();
-        worker.addEventListener('message', function (event, data) {
-          if(event.data.status === 'done') {
-            options.success(event.data.data);
-          }
-        });
-        worker.postMessage({
-          files: files,
-          ziplib: require.toUrl('JSZip'),
-          base64: (!options || options.base64 !== false)
-        });
-      },
-      error: function () {
-        options.error();
-      }
-    });
+    // workbook.generateFilesAsync({
+    //   success: function (files) {
+    //     var worker = new Worker();
+    //     worker.addEventListener('message', function (event, data) {
+    //       if(event.data.status === 'done') {
+    //         options.success(event.data.data);
+    //       }
+    //     });
+    //     worker.postMessage({
+    //       files: files,
+    //       ziplib: require.toUrl('JSZip'),
+    //       base64: (!options || options.base64 !== false)
+    //     });
+    //   },
+    //   error: function () {
+    //     options.error();
+    //   }
+    // });
   },
   
   /**

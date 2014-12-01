@@ -1,13 +1,17 @@
 'use strict';
 
 var should = require('should');
-var excel = require('../index');
+var Excel = require('../index');
+var Workbook = require('../Excel/Workbook');
 
 describe('Excel builder library', function () {
-  describe('', function () {
-    it('should do something', function () {
-      var num = 1;
-      num.should.be.equal(1);
+
+  describe('.createWorkbook', function () {
+    it('should create a new workbook', function () {
+      var testWorkbook = Excel.createWorkbook();
+      
+      testWorkbook.should.be.instanceOf(Workbook);
     });
   });
+
 });

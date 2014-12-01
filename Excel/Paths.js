@@ -1,5 +1,5 @@
 'use strict';
 
-var Paths = function () {};
+if (!global.Paths) { global.Paths = {}; }
 
-module.exports = Paths;
+module.exports = global.Paths;

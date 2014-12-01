@@ -22,13 +22,26 @@ var AbsoluteAnchor = function (config) {
     this.setDimensions(config.width, config.height);
   }
 };
-
-AbsoluteAnchor.prototype.setPos = function (width, height) {
-  this.width = width;
-  this.height = height;
+/**
+ * Sets the X and Y offsets.
+ *
+ * @param {Number} x
+ * @param {Number} y
+ * @returns {undefined}
+ */
+AbsoluteAnchor.prototype.setPos = function (x, y) {
+  this.x = x;
+  this.y = y;
 };
 
-AbsoluteAnchor.prototype.setDimension = function (width, height) {
+/**
+ * Sets the width and height of the image.
+ *
+ * @param {Number} width
+ * @param {Number} height
+ * @returns {undefined}
+ */
+AbsoluteAnchor.prototype.setDimensions = function (width, height) {
   this.width = width;
   this.height = height;
 };
@@ -39,14 +52,14 @@ AbsoluteAnchor.prototype.toXML = function (xmlDoc, content) {
   pos.setAttribute('x', this.x);
   pos.setAttribute('y', this.y);
   root.appendChild(pos);
-  
+
   var dimensions = util.createElement(xmlDoc, 'xdr:ext');
   dimensions.setAttribute('cx', this.width);
   dimensions.setAttribute('cy', this.height);
   root.appendChild(dimensions);
-  
+
   root.appendChild(content);
-  
+
   root.appendChild(util.createElement(xmlDoc, 'xdr:clientData'));
   return root;
 };

@@ -11,6 +11,7 @@ var util = require('../util');
  * @param {Number} config.height Height in EMU's
  * @constructor
  */
+
 var OneCellAnchor = function (config) {
   this.x = null;
   this.y = null;
@@ -18,27 +19,23 @@ var OneCellAnchor = function (config) {
   this.yOff = null;
   this.width = null;
   this.height = null;
-
   if(config) {
     this.setPos(config.x, config.y, config.xOff, config.yOff);
     this.setDimensions(config.width, config.height);
   }
 };
-
-OneCellAnchor.prototype.setPos = function (width, height, xOff, yOff) {
+OneCellAnchor.prototype.setPos = function (x, y, xOff, yOff) {
   this.x = x;
   this.y = y;
-
   if(xOff !== undefined) {
     this.xOff = xOff;
   }
-
   if(yOff !== undefined) {
     this.yOff = yOff;
   }
 };
 
-OneCellAnchor.prototype.setDimension = function (width, height) {
+OneCellAnchor.prototype.setDimensions = function (width, height) {
   this.width = width;
   this.height = height;
 };
@@ -58,18 +55,17 @@ OneCellAnchor.prototype.toXML = function (xmlDoc, content) {
   from.appendChild(fromColOff);
   from.appendChild(fromRow);
   from.appendChild(fromRowOff);
-  
+
   root.appendChild(from);
-  
+
   var dimensions = util.createElement(xmlDoc, 'xdr:ext');
   dimensions.setAttribute('cx', this.width);
   dimensions.setAttribute('cy', this.height);
   root.appendChild(dimensions);
-  
+
   root.appendChild(content);
-  
+
   root.appendChild(util.createElement(xmlDoc, 'xdr:clientData'));
   return root;
 };
-
 module.exports = OneCellAnchor;

@@ -1,7 +1,9 @@
 'use strict';
 
-var pixelToEMUs = function (pixels) {
+var pixelsToEMUs = function (pixels) {
   return Math.round(pixels * 914400 / 96);
 };
 
-module.exports = pixelToEMUs;
+module.exports = {
+  pixelsToEMUs: pixelsToEMUs
+};

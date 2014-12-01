@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('underscore');
 var AbsoluteAnchor = require('./AbsoluteAnchor');
 var OneCellAnchor = require('./OneCellAnchor');
 var TwoCellAnchor = require('./TwoCellAnchor');

@@ -39,7 +39,7 @@ RelationshipManager.prototype.getRelationshipId = function (object) {
 RelationshipManager.prototype.toXML = function () {
   var doc = util.createXmlDoc(util.schemas.relationshipPackage, 'Relationships');
   var relationships = doc.documentElement;
-  
+
   _.each(this.relations, function (data, id) {
     var relationship = util.createElement(doc, 'Relationship', [
       ['Id', data.id],

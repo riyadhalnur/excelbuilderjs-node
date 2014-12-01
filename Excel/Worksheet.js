@@ -1,8 +1,8 @@
 'use strict';
 
 var _ = require('underscore');
-var RelationshipManager = require('./RelationshipManager');
 var util = require('./util');
+var RelationshipManager = require('./RelationshipManager');
 
 var Worksheet = function (config) {
   this.relations = null;
@@ -22,14 +22,17 @@ Worksheet.prototype.initialize = function (config) {
   this.name = config.name;
   this.id = _.uniqueId('Worksheet');
   this._timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
-
-  if (config.columns) {
+  if(config.columns) {
     this.setColumns(config.columns);
   }
-  
+
   this.relations = new RelationshipManager();
 };
 
+/**
+ * Returns an object that can be consumed by a WorksheetExportWorker
+ * @returns {Object}
+ */
 Worksheet.prototype.exportData = function () {
   return {
     relations: this.relations.exportData(),
@@ -45,6 +48,10 @@ Worksheet.prototype.exportData = function () {
   };
 };
 
+/**
+ * Imports data - to be used while inside of a WorksheetExportWorker.
+ * @param {Object} data
+ */
 Worksheet.prototype.importData = function (data) {
   this.relations.importData(data.relations);
   delete data.relations;
@@ -65,6 +72,14 @@ Worksheet.prototype.addDrawings = function (table) {
   this.relations.addRelation(table, 'drawingRelationship');
 };
 
+/**
+ * Expects an array length of three.
+ *
+ * @see Excel/Worksheet compilePageDetailPiece
+ * @see <a href='/cookbook/addingHeadersAndFooters.html'>Adding headers and footers to a worksheet</a>
+ *
+ * @param {Array} headers [left, center, right]
+ */
 Worksheet.prototype.setHeader = function (headers) {
   if(!_.isArray(headers)) {
     throw 'Invalid argument type - setHeader expects an array of three instructions';
@@ -72,6 +87,14 @@ Worksheet.prototype.setHeader = function (headers) {
   this._headers = headers;
 };
 
+/**
+ * Expects an array length of three.
+ *
+ * @see Excel/Worksheet compilePageDetailPiece
+ * @see <a href='/cookbook/addingHeadersAndFooters.html'>Adding headers and footers to a worksheet</a>
+ *
+ * @param {Array} footers [left, center, right]
+ */
 Worksheet.prototype.setFooter = function (footers) {
   if(!_.isArray(footers)) {
     throw 'Invalid argument type - setFooter expects an array of three instructions';
@@ -79,80 +102,111 @@ Worksheet.prototype.setFooter = function (footers) {
   this._footers = footers;
 };
 
+/**
+ * Turns page header/footer details into the proper format for Excel.
+ * @param {type} data
+ * @returns {String}
+ */
 Worksheet.prototype.compilePageDetailPackage = function (data) {
-  data = data || "";
+  data = data || '';
   return [
-  "&L", this.compilePageDetailPiece(data[0] || ""),
-  "&C", this.compilePageDetailPiece(data[1] || ""),
-  "&R", this.compilePageDetailPiece(data[2] || "")
+    '&L', this.compilePageDetailPiece(data[0] || ''),
+    '&C', this.compilePageDetailPiece(data[1] || ''),
+    '&R', this.compilePageDetailPiece(data[2] || '')
   ].join('');
 };
 
+/**
+ * Turns instructions on page header/footer details into something
+ * usable by Excel.
+ *
+ * @param {type} data
+ * @returns {String|@exp;_@call;reduce}
+ */
 Worksheet.prototype.compilePageDetailPiece = function (data) {
-  if (_.isString(data)) {
+  if(_.isString(data)) {
     return '&"-,Regular"'.concat(data);
   }
-
-  if(_.isObject(data) && !_.isArray(data)) { 
-    var string = "";
-
-    if (data.font || data.bold) {
-      var weighting = data.bold ? "Bold" : "Regular";
+  if(_.isObject(data) && !_.isArray(data)) {
+    var string = '';
+    if(data.font || data.bold) {
+      var weighting = data.bold ? 'Bold' : 'Regular';
       string += '&"' + (data.font || '-');
       string += ',' + weighting + '"';
     } else {
       string += '&"-,Regular"';
     }
-
-    if (data.underline) {
-      string += "&U";
+    if(data.underline) {
+      string += '&U';
     }
-
-    if (data.fontSize) {
-      string += "&"+data.fontSize;
+    if(data.fontSize) {
+      string += '&'+data.fontSize;
     }
-
     string += data.text;
-    
+
     return string;
   }
-  
-  if (_.isArray(data)) {
+
+  if(_.isArray(data)) {
     var self = this;
     return _.reduce(data, function (m, v) {
       return m.concat(self.compilePageDetailPiece(v));
-    }, "");
+    }, '');
   }
 };
 
+/**
+ * Creates the header node.
+ *
+ * @todo implement the ability to do even/odd headers
+ * @param {XML Doc} doc
+ * @returns {XML Node}
+ */
 Worksheet.prototype.exportHeader = function (doc) {
   var oddHeader = doc.createElement('oddHeader');
   oddHeader.appendChild(doc.createTextNode(this.compilePageDetailPackage(this._headers)));
   return oddHeader;
 };
 
+/**
+ * Creates the footer node.
+ *
+ * @todo implement the ability to do even/odd footers
+ * @param {XML Doc} doc
+ * @returns {XML Node}
+ */
 Worksheet.prototype.exportFooter = function (doc) {
   var oddFooter = doc.createElement('oddFooter');
   oddFooter.appendChild(doc.createTextNode(this.compilePageDetailPackage(this._footers)));
   return oddFooter;
 };
 
+/**
+ * This creates some nodes ahead of time, which cuts down on generation time due to
+ * most cell definitions being essentially the same, but having multiple nodes that need
+ * to be created. Cloning takes less time than creation.
+ *
+ * @private
+ * @param {XML Doc} doc
+ * @returns {_L8.Anonym$0._buildCache.Anonym$2}
+ */
 Worksheet.prototype._buildCache = function (doc) {
   var numberNode = doc.createElement('c');
   var value = doc.createElement('v');
-  value.appendChild(doc.createTextNode("--temp--"));
+  value.appendChild(doc.createTextNode('--temp--'));
   numberNode.appendChild(value);
-  
+
   var formulaNode = doc.createElement('c');
   var formulaValue = doc.createElement('f');
-  formulaValue.appendChild(doc.createTextNode("--temp--"));
+  formulaValue.appendChild(doc.createTextNode('--temp--'));
   formulaNode.appendChild(formulaValue);
-  
+
   var stringNode = doc.createElement('c');
   stringNode.setAttribute('t', 's');
   var stringValue = doc.createElement('v');
-  stringValue.appendChild(doc.createTextNode("--temp--"));
+  stringValue.appendChild(doc.createTextNode('--temp--'));
   stringNode.appendChild(stringValue);
+
 
   return {
     number: numberNode,
@@ -162,38 +216,39 @@ Worksheet.prototype._buildCache = function (doc) {
   };
 };
 
+/**
+ * Runs through the XML document and grabs all of the strings that will
+ * be sent to the 'shared strings' document.
+ *
+ * @returns {Array}
+ */
 Worksheet.prototype.collectSharedStrings = function () {
   var data = this.data;
   var maxX = 0;
   var strings = {};
-
-  for (var row = 0, l = data.length; row < l; row++) {
+  for(var row = 0, l = data.length; row < l; row++) {
     var dataRow = data[row];
     var cellCount = dataRow.length;
     maxX = cellCount > maxX ? cellCount : maxX;
-
-    for (var c = 0; c < cellCount; c++) {
+    for(var c = 0; c < cellCount; c++) {
       var cellValue = dataRow[c];
       var metadata = cellValue && cellValue.metadata || {};
-
       if (cellValue && typeof cellValue === 'object') {
         cellValue = cellValue.value;
       }
-      
-      if (!metadata.type) {
-        if (typeof cellValue === 'number') {
-            metadata.type = 'number';
+
+      if(!metadata.type) {
+        if(typeof cellValue === 'number') {
+          metadata.type = 'number';
         }
       }
-
-      if (metadata.type === "text" || !metadata.type) {
-        if (typeof strings[cellValue] === 'undefined') {
+      if(metadata.type === 'text' || !metadata.type) {
+        if(typeof strings[cellValue] === 'undefined') {
           strings[cellValue] = true;
         }
       }
     }
   }
-
   return _.keys(strings);
 };
 
@@ -205,19 +260,19 @@ Worksheet.prototype.toXML = function () {
   var i, l, row;
   worksheet.setAttribute('xmlns:r', util.schemas.relationships);
   worksheet.setAttribute('xmlns:mc', util.schemas.markupCompat);
-  
+
   var maxX = 0;
   var sheetData = util.createElement(doc, 'sheetData');
-  
+
   var cellCache = this._buildCache(doc);
-  
-  for (row = 0, l = data.length; row < l; row++) {
+
+  for(row = 0, l = data.length; row < l; row++) {
     var dataRow = data[row];
     var cellCount = dataRow.length;
     maxX = cellCount > maxX ? cellCount : maxX;
     var rowNode = doc.createElement('row');
-    
-    for (var c = 0; c < cellCount; c++) {
+
+    for(var c = 0; c < cellCount; c++) {
       columns[c] = columns[c] || {};
       var cellValue = dataRow[c];
       var cell, metadata = cellValue && cellValue.metadata || {};
@@ -226,8 +281,8 @@ Worksheet.prototype.toXML = function () {
         cellValue = cellValue.value;
       }
 
-      if (!metadata.type) {
-        if (typeof cellValue === 'number') {
+      if(!metadata.type) {
+        if(typeof cellValue === 'number') {
           metadata.type = 'number';
         }
       }
@@ -246,10 +301,10 @@ Worksheet.prototype.toXML = function () {
           cell.firstChild.firstChild.nodeValue = cellValue;
           break;
         case 'text':
-          /*falls through*/
+        /*falls through*/
         default:
           var id;
-          if (typeof this.sharedStrings.strings[cellValue] !== 'undefined') {
+          if(typeof this.sharedStrings.strings[cellValue] !== 'undefined') {
             id = this.sharedStrings.strings[cellValue];
           } else {
             id = this.sharedStrings.addString(cellValue);
@@ -258,30 +313,27 @@ Worksheet.prototype.toXML = function () {
           cell.firstChild.firstChild.nodeValue = id;
           break;
       }
-
-      if (metadata.style) {
+      if(metadata.style) {
         cell.setAttribute('s', metadata.style);
       }
-
       cell.setAttribute('r', util.positionToLetterRef(c + 1, row + 1));
       rowNode.appendChild(cell);
     }
-
     rowNode.setAttribute('r', row + 1);
     sheetData.appendChild(rowNode);
-  } 
-  
-  if (maxX !== 0) {
+  }
+
+  if(maxX !== 0) {
     worksheet.appendChild(util.createElement(doc, 'dimension', [
-        ['ref',  util.positionToLetterRef(1, 1) + ':' + util.positionToLetterRef(maxX, data.length)]
+      ['ref',  util.positionToLetterRef(1, 1) + ':' + util.positionToLetterRef(maxX, data.length)]
     ]));
   } else {
     worksheet.appendChild(util.createElement(doc, 'dimension', [
-        ['ref',  util.positionToLetterRef(1, 1)]
+      ['ref',  util.positionToLetterRef(1, 1)]
     ]));
   }
-  
-  if (this.columns.length) {
+
+  if(this.columns.length) {
     worksheet.appendChild(this.exportColumns(doc));
   }
   worksheet.appendChild(sheetData);
@@ -297,24 +349,24 @@ Worksheet.prototype.toXML = function () {
     }
     worksheet.appendChild(mergeCells);
   }
-  
+
   this.exportPageSettings(doc, worksheet);
-  
-  if (this._headers.length > 0 || this._footers.length > 0) {
+
+  if(this._headers.length > 0 || this._footers.length > 0) {
     var headerFooter = doc.createElement('headerFooter');
-    if (this._headers.length > 0) {
+    if(this._headers.length > 0) {
       headerFooter.appendChild(this.exportHeader(doc));
     }
-    if (this._footers.length > 0) {
+    if(this._footers.length > 0) {
       headerFooter.appendChild(this.exportFooter(doc));
     }
     worksheet.appendChild(headerFooter);
   }
-  
-  if (this._tables.length > 0) {
+
+  if(this._tables.length > 0) {
     var tables = doc.createElement('tableParts');
     tables.setAttribute('count', this._tables.length);
-    for (i = 0, l = this._tables.length; i < l; i++) {
+    for(i = 0, l = this._tables.length; i < l; i++) {
       var table = doc.createElement('tablePart');
       table.setAttribute('r:id', this.relations.getRelationshipId(this._tables[i]));
       tables.appendChild(table);
@@ -324,72 +376,119 @@ Worksheet.prototype.toXML = function () {
 
   // the 'drawing' element should be written last, after 'headerFooter', 'mergeCells', etc. due
   // to issue with Microsoft Excel (2007, 2013)
-  for (i = 0, l = this._drawings.length; i < l; i++) {
+  for(i = 0, l = this._drawings.length; i < l; i++) {
     var drawing = doc.createElement('drawing');
     drawing.setAttribute('r:id', this.relations.getRelationshipId(this._drawings[i]));
     worksheet.appendChild(drawing);
   }
-
   return doc;
 };
 
+/**
+ *
+ * @param {XML Doc} doc
+ * @returns {XML Node}
+ */
 Worksheet.prototype.exportColumns = function (doc) {
   var cols = util.createElement(doc, 'cols');
-  for (var i = 0, l = this.columns.length; i < l; i++) {
+  for(var i = 0, l = this.columns.length; i < l; i++) {
     var cd = this.columns[i];
     var col = util.createElement(doc, 'col', [
-        ['min', cd.min || i + 1],
-        ['max', cd.max || i + 1]
+      ['min', cd.min || i + 1],
+      ['max', cd.max || i + 1]
     ]);
-
     if (cd.hidden) {
       col.setAttribute('hidden', 1);
     }
-
-    if (cd.bestFit) {
+    if(cd.bestFit) {
       col.setAttribute('bestFit', 1);
     }
-
-    if (cd.customWidth || cd.width) {
+    if(cd.customWidth || cd.width) {
       col.setAttribute('customWidth', 1);
     }
-
-    if (cd.width) {
+    if(cd.width) {
       col.setAttribute('width', cd.width);
     } else {
       col.setAttribute('width', 9.140625);
     }
-    
+
     cols.appendChild(col);
   }
-
   return cols;
 };
 
+/**
+ * Sets the page settings on a worksheet node.
+ *
+ * @param {XML Doc} doc
+ * @param {XML Node} worksheet
+ * @returns {undefined}
+ */
 Worksheet.prototype.exportPageSettings = function (doc, worksheet) {
-  if (this._orientation) {
+
+  if(this._orientation) {
     worksheet.appendChild(util.createElement(doc, 'pageSetup', [
       ['orientation', this._orientation]
     ]));
   }
 };
 
+/**
+ * http://www.schemacentral.com/sc/ooxml/t-ssml_ST_Orientation.html
+ *
+ * Can be one of 'portrait' or 'landscape'.
+ *
+ * @param {String} orientation
+ * @returns {undefined}
+ */
 Worksheet.prototype.setPageOrientation = function (orientation) {
   this._orientation = orientation;
 };
 
+/**
+ * Expects an array of column definitions. Each column definition needs to have a width assigned to it.
+ *
+ * @param {Array} columns
+ */
 Worksheet.prototype.setColumns = function (columns) {
   this.columns = columns;
 };
 
+/**
+ * Expects an array of data to be translated into cells.
+ *
+ * @param {Array} data Two dimensional array - [ [A1, A2], [B1, B2] ]
+ * @see <a href='/cookbook/addingDataToAWorksheet.html'>Adding data to a worksheet</a>
+ */
 Worksheet.prototype.setData = function (data) {
   this.data = data;
 };
 
-Worksheet.prototype.mergeCells = function (cell1, cell2) {
+/**
+ * Merge cells in given range
+ *
+ * @param cell1 - A1, A2...
+ * @param cell2 - A2, A3...
+ */
+Worksheet.prototype.mergeCells = function(cell1, cell2) {
   this.mergedCells.push([cell1, cell2]);
 };
 
+/**
+ * Expects an array containing an object full of column format definitions.
+ * http://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.column.aspx
+ * bestFit
+ * collapsed
+ * customWidth
+ * hidden
+ * max
+ * min
+ * outlineLevel
+ * phonetic
+ * style
+ * width
+ * @param {Array} columnFormats
+ */
 Worksheet.prototype.setColumnFormats = function (columnFormats) {
   this.columnFormats = columnFormats;
 };

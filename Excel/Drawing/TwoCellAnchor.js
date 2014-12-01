@@ -9,6 +9,7 @@ var util = require('../util');
  * @param {Number} config.to The x and y offset to where the picture will end
  * @constructor
  */
+
 var TwoCellAnchor = function (config) {
   this.from = {xOff: 0, yOff: 0};
   this.to = {xOff: 0, yOff: 0};
@@ -20,7 +21,7 @@ var TwoCellAnchor = function (config) {
 };
 
 TwoCellAnchor.prototype.setFrom = function (x, y, xOff, yOff) {
-  this.from.x = x; 
+  this.from.x = x;
   this.from.y = y;
 
   if(xOff !== undefined) {
@@ -33,7 +34,7 @@ TwoCellAnchor.prototype.setFrom = function (x, y, xOff, yOff) {
 };
 
 TwoCellAnchor.prototype.setTo = function (x, y, xOff, yOff) {
-  this.to.x = x; 
+  this.to.x = x;
   this.to.y = y;
 
   if(xOff !== undefined) {
@@ -47,7 +48,7 @@ TwoCellAnchor.prototype.setTo = function (x, y, xOff, yOff) {
 
 TwoCellAnchor.prototype.toXML = function (xmlDoc, content) {
   var root = util.createElement(xmlDoc, 'xdr:twoCellAnchor');
-            
+
   var from = util.createElement(xmlDoc, 'xdr:from');
   var fromCol = util.createElement(xmlDoc, 'xdr:col');
   fromCol.appendChild(xmlDoc.createTextNode(this.from.x));
@@ -57,12 +58,12 @@ TwoCellAnchor.prototype.toXML = function (xmlDoc, content) {
   fromRow.appendChild(xmlDoc.createTextNode(this.from.y));
   var fromRowOff = util.createElement(xmlDoc, 'xdr:rowOff');
   fromRowOff.appendChild(xmlDoc.createTextNode(this.from.yOff));
-  
+
   from.appendChild(fromCol);
   from.appendChild(fromColOff);
   from.appendChild(fromRow);
   from.appendChild(fromRowOff);
-  
+
   var to = util.createElement(xmlDoc, 'xdr:to');
   var toCol = util.createElement(xmlDoc, 'xdr:col');
   toCol.appendChild(xmlDoc.createTextNode(this.to.x));
@@ -72,17 +73,18 @@ TwoCellAnchor.prototype.toXML = function (xmlDoc, content) {
   toRow.appendChild(xmlDoc.createTextNode(this.to.y));
   var toRowOff = util.createElement(xmlDoc, 'xdr:rowOff');
   toRowOff.appendChild(xmlDoc.createTextNode(this.from.yOff));
-  
+
   to.appendChild(toCol);
   to.appendChild(toColOff);
   to.appendChild(toRow);
   to.appendChild(toRowOff);
-  
+
+
   root.appendChild(from);
   root.appendChild(to);
-  
+
   root.appendChild(content);
-  
+
   root.appendChild(util.createElement(xmlDoc, 'xdr:clientData'));
   return root;
 };

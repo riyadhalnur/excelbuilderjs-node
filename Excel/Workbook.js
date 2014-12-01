@@ -32,7 +32,6 @@ Workbook.prototype.createWorksheet = function (config) {
   _.defaults(config, {
     name: 'Sheet '.concat(this.worksheets.length + 1)
   });
-
   return new Worksheet(config);
 };
 
@@ -48,29 +47,28 @@ Workbook.prototype.addDrawings = function (drawings) {
   this.drawings.push(drawings);
 };
 
-Workbook.prototype.addMedia = function () {
+Workbook.prototype.addMedia = function (type, fileName, fileData, contentType) {
   var fileNamePieces = fileName.split('.');
   var extension = fileNamePieces[fileNamePieces.length - 1];
-
-  if (!contentType) {
+  if(!contentType) {
     switch(extension.toLowerCase()) {
       case 'jpeg':
       case 'jpg':
-        contentType = "image/jpeg";
+        contentType = 'image/jpeg';
         break;
-      case 'png': 
-        contentType = "image/png";
+      case 'png':
+        contentType = 'image/png';
         break;
-      case 'gif': 
-        contentType = "image/gif";
+      case 'gif':
+        contentType = 'image/gif';
         break;
-      default: 
+      default:
         contentType = null;
         break;
     }
   }
 
-  if (!this.media[fileName]) {
+  if(!this.media[fileName]) {
     this.media[fileName] = {
       id: fileName,
       data: fileData,
@@ -79,7 +77,6 @@ Workbook.prototype.addMedia = function () {
       extension: extension
     };
   }
-
   return this.media[fileName];
 };
 
@@ -93,24 +90,23 @@ Workbook.prototype.createContentTypes = function () {
   var doc = util.createXmlDoc(util.schemas.contentTypes, 'Types');
   var types = doc.documentElement;
   var i, l;
-  
+
   types.appendChild(util.createElement(doc, 'Default', [
-      ['Extension', "rels"],
-      ['ContentType', "application/vnd.openxmlformats-package.relationships+xml"]
+    ['Extension', 'rels'],
+    ['ContentType', 'application/vnd.openxmlformats-package.relationships+xml']
   ]));
   types.appendChild(util.createElement(doc, 'Default', [
-      ['Extension', "xml"],
-      ['ContentType', "application/xml"]
+    ['Extension', 'xml'],
+    ['ContentType', 'application/xml']
   ]));
-  
+
   var extensions = {};
-  for (var filename in this.media) {
+  for(var filename in this.media) {
     if(this.media.hasOwnProperty(filename)) {
       extensions[this.media[filename].extension] = this.media[filename].contentType;
     }
   }
-
-  for (var extension in extensions) {
+  for(var extension in extensions) {
     if(extensions.hasOwnProperty(extension)) {
       types.appendChild(util.createElement(doc, 'Default', [
         ['Extension', extension],
@@ -118,41 +114,40 @@ Workbook.prototype.createContentTypes = function () {
       ]));
     }
   }
-  
+
   types.appendChild(util.createElement(doc, 'Override', [
-      ['PartName', "/xl/workbook.xml"],
-      ['ContentType', "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"]
+    ['PartName', '/xl/workbook.xml'],
+    ['ContentType', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml']
   ]));
   types.appendChild(util.createElement(doc, 'Override', [
-      ['PartName', "/xl/sharedStrings.xml"],
-      ['ContentType', "application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"]
+    ['PartName', '/xl/sharedStrings.xml'],
+    ['ContentType', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml']
   ]));
   types.appendChild(util.createElement(doc, 'Override', [
-      ['PartName', "/xl/styles.xml"],
-      ['ContentType', "application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"]
+    ['PartName', '/xl/styles.xml'],
+    ['ContentType', 'application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml']
   ]));
 
-  for (i = 0, l = this.worksheets.length; i < l; i++) {
+  for(i = 0, l = this.worksheets.length; i < l; i++) {
     types.appendChild(util.createElement(doc, 'Override', [
-      ['PartName', "/xl/worksheets/sheet" + (i + 1) + ".xml"],
-      ['ContentType', "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"]
+      ['PartName', '/xl/worksheets/sheet' + (i + 1) + '.xml'],
+      ['ContentType', 'application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml']
+    ]));
+  }
+  for(i = 0, l = this.tables.length; i < l; i++) {
+    types.appendChild(util.createElement(doc, 'Override', [
+      ['PartName', '/xl/tables/table' + (i + 1) + '.xml'],
+      ['ContentType', 'application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml']
     ]));
   }
 
-  for (i = 0, l = this.tables.length; i < l; i++) {
-    types.appendChild(util.createElement(doc, 'Override', [
-      ['PartName', "/xl/tables/table" + (i + 1) + ".xml"],
-      ['ContentType', "application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"]
-    ]));
-  }
-  
-  for (i = 0, l = this.drawings.length; i < l; i++) {
+  for(i = 0, l = this.drawings.length; i < l; i++) {
     types.appendChild(util.createElement(doc, 'Override', [
       ['PartName', '/xl/drawings/drawing' + (i + 1) + '.xml'],
       ['ContentType', 'application/vnd.openxmlformats-officedocument.drawing+xml']
     ]));
   }
-  
+
   return doc;
 };
 
@@ -163,12 +158,12 @@ Workbook.prototype.toXML = function () {
 
   var maxWorksheetNameLength = 31;
   var sheets = util.createElement(doc, 'sheets');
-  for (var i = 0, l = this.worksheets.length; i < l; i++) {
+  for(var i = 0, l = this.worksheets.length; i < l; i++) {
     var sheet = doc.createElement('sheet');
     // Microsoft Excel (2007, 2013) do not allow worksheet names longer than 31 characters
-    // if the worksheet name is longer, Excel displays an "Excel found unreadable content..." popup when opening the file
-    if (console != null && this.worksheets[i].name.length > maxWorksheetNameLength) {
-      console.log('Microsoft Excel requires work sheet names to be less than ' + (maxWorksheetNameLength+1) + 
+    // if the worksheet name is longer, Excel displays an 'Excel found unreadable content...' popup when opening the file
+    if(console != null && this.worksheets[i].name.length > maxWorksheetNameLength) {
+      console.log('Microsoft Excel requires work sheet names to be less than ' + (maxWorksheetNameLength+1) +
         ' characters long, work sheet name "' + this.worksheets[i].name +
         '" is ' + this.worksheets[i].name.length + ' characters long');
     }
@@ -178,7 +173,6 @@ Workbook.prototype.toXML = function () {
     sheets.appendChild(sheet);
   }
   wb.appendChild(sheets);
-
   return doc;
 };
 
@@ -190,7 +184,6 @@ Workbook.prototype.createWorkbookRelationship = function () {
     ['Type', util.schemas.officeDocument],
     ['Target', 'xl/workbook.xml']
   ]));
-
   return doc;
 };
 
@@ -199,28 +192,31 @@ Workbook.prototype._generateCorePaths = function (files) {
   Paths[this.styleSheet.id] = 'styles.xml';
   Paths[this.sharedStrings.id] = 'sharedStrings.xml';
   Paths[this.id] = '/xl/workbook.xml';
-  
-  for (i = 0, l = this.tables.length; i < l; i++) {
+
+  for(i = 0, l = this.tables.length; i < l; i++) {
     files['/xl/tables/table' + (i + 1) + '.xml'] = this.tables[i].toXML();
     Paths[this.tables[i].id] = '/xl/tables/table' + (i + 1) + '.xml';
   }
-  
-  for (var fileName in this.media) {
+
+  for(var fileName in this.media) {
     if(this.media.hasOwnProperty(fileName)) {
       var media = this.media[fileName];
       files['/xl/media/' + fileName] = media.data;
       Paths[fileName] = '/xl/media/' + fileName;
     }
   }
-  
-  for (i = 0, l = this.drawings.length; i < l; i++) {
+
+  for(i = 0, l = this.drawings.length; i < l; i++) {
     files['/xl/drawings/drawing' + (i + 1) + '.xml'] = this.drawings[i].toXML();
     Paths[this.drawings[i].id] = '/xl/drawings/drawing' + (i + 1) + '.xml';
     files['/xl/drawings/_rels/drawing' + (i + 1) + '.xml.rels'] = this.drawings[i].relations.toXML();
   }
+
+
 };
 
 Workbook.prototype._prepareFilesForPackaging = function (files) {
+
   _.extend(files, {
     '/[Content_Types].xml': this.createContentTypes(),
     '/_rels/.rels': this.createWorkbookRelationship(),
@@ -231,7 +227,7 @@ Workbook.prototype._prepareFilesForPackaging = function (files) {
   });
 
   _.each(files, function (value, key) {
-    if (key.indexOf('.xml') !== -1 || key.indexOf('.rels') !== -1) {
+    if(key.indexOf('.xml') !== -1 || key.indexOf('.rels') !== -1) {
       if (value instanceof XMLDOM){
         files[key] = value.toString();
       } else {
@@ -240,33 +236,34 @@ Workbook.prototype._prepareFilesForPackaging = function (files) {
       var content = files[key].replace(/xmlns=""/g, '');
       content = content.replace(/NS[\d]+:/g, '');
       content = content.replace(/xmlns:NS[\d]+=""/g, '');
-
-      files[key] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + "\n" + content;
+      files[key] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + '\n' + content;
     }
   });
 };
 
-Workbook.prototype.generateFilesAsync = function (options) {
-  // TODO
+Workbook.prototype.generateFilesAsync = function () {
+  //TODO Implement
 };
 
 Workbook.prototype._createWorker = function () {
-  // TODO
+  //TODO Implement
 };
 
 Workbook.prototype.generateFiles = function () {
   var files = {};
   this._generateCorePaths(files);
 
-  for (var i = 0, l = this.worksheets.length; i < l; i++) {
+
+  for(var i = 0, l = this.worksheets.length; i < l; i++) {
     files['/xl/worksheets/sheet' + (i + 1) + '.xml'] = this.worksheets[i].toXML();
     Paths[this.worksheets[i].id] = 'worksheets/sheet' + (i + 1) + '.xml';
     files['/xl/worksheets/_rels/sheet' + (i + 1) + '.xml.rels'] = this.worksheets[i].relations.toXML();
   }
-  
+
   this._prepareFilesForPackaging(files);
 
   return files;
 };
+
 
 module.exports = Workbook;

@@ -4,7 +4,7 @@ var XMLDOM = require('./XMLDOM');
 
 module.exports = {
   _idSpaces: {},
-  
+
   /**
    * Returns a number based on a namespace. So, running with 'Picture' will return 1. Run again, you will get 2. Run with 'Foo', you'll get 1.
    * @param {String} space
@@ -16,14 +16,14 @@ module.exports = {
     }
     return this._idSpaces[space]++;
   },
-    
+
   /**
-   * Attempts to create an XML document. Due to limitations in web workers, 
-   * it may return a 'fake' xml document created from the XMLDOM.js file. 
-   * 
+   * Attempts to create an XML document. Due to limitations in web workers,
+   * it may return a 'fake' xml document created from the XMLDOM.js file.
+   *
    * Takes a namespace to start the xml file in, as well as the root element
-   * of the xml file. 
-   * 
+   * of the xml file.
+   *
    * @param {type} ns
    * @param {type} base
    * @returns {ActiveXObject|@exp;document@pro;implementation@call;createDocument|@new;XMLDOM}
@@ -31,11 +31,11 @@ module.exports = {
   createXmlDoc: function (ns, base) {
     return new XMLDOM(ns || null, base, null);
   },
-  
+
   /**
    * Creates an xml node (element). Used to simplify some calls, as IE is
-   * very particular about namespaces and such. 
-   * 
+   * very particular about namespaces and such.
+   *
    * @param {XMLDOM} doc An xml document (actual DOM or fake DOM, not a string)
    * @param {type} name The name of the element
    * @param {type} attributes
@@ -47,21 +47,21 @@ module.exports = {
     attributes = attributes || [];
     var i = attributes.length;
     while (i--) {
-      if (!ie && attributes[i][0].indexOf('xmlns') !== -1) {
-        el.setAttributeNS("http://www.w3.org/2000/xmlns/", attributes[i][0], attributes[i][1]);
+      if(!ie && attributes[i][0].indexOf('xmlns') !== -1) {
+        el.setAttributeNS('http://www.w3.org/2000/xmlns/', attributes[i][0], attributes[i][1]);
       } else {
         el.setAttribute(attributes[i][0], attributes[i][1]);
       }
     }
     return el;
   },
-  
+
   LETTER_REFS: {},
 
   positionToLetterRef: function (x, y) {
     var digit = 1, index, num = x, string = '', alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if (this.LETTER_REFS[x]) {
-        return this.LETTER_REFS[x].concat(y);
+    if(this.LETTER_REFS[x]) {
+      return this.LETTER_REFS[x].concat(y);
     }
     while (num > 0) {
       num -= Math.pow(26, digit -1);
@@ -72,7 +72,6 @@ module.exports = {
       digit += 1;
     }
     this.LETTER_REFS[x] = string;
-
     return string.concat(y);
   },
 

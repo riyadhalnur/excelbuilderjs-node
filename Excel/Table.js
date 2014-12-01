@@ -5,8 +5,8 @@ var util = require('./util');
 
 var Table = function (config) {
   _.defaults(this, {
-    name: "",
-    displayName: "",
+    name: '',
+    displayName: '',
     dataCellStyle: null,
     dataDfxId: null,
     headerRowBorderDxfId: null,
@@ -48,20 +48,42 @@ Table.prototype.setTableColumns = function (columns) {
   }, this);
 };
 
+/**
+ * Expects an object with the following optional properties:
+ * name (required)
+ * dataCellStyle
+ * dataDxfId
+ * headerRowCellStyle
+ * headerRowDxfId
+ * totalsRowCellStyle
+ * totalsRowDxfId
+ * totalsRowFunction
+ * totalsRowLabel
+ * columnFormula
+ * columnFormulaIsArrayType (boolean)
+ * totalFormula
+ * totalFormulaIsArrayType (boolean)
+ */
 Table.prototype.addTableColumn = function (column) {
-  if (_.isString(column)) {
+  if(_.isString(column)) {
     column = {
       name: column
-    };           
+    };
   }
-
-  if (!column.name) {
+  if(!column.name) {
     throw 'Invalid argument for addTableColumn - minimum requirement is a name property';
   }
-
   this.tableColumns.push(column);
 };
 
+/**
+ * Expects an object with the following properties:
+ * caseSensitive (boolean)
+ * dataRange
+ * columnSort (assumes true)
+ * sortDirection
+ * sortRange (defaults to dataRange)
+ */
 Table.prototype.setSortState = function (state) {
   this.sortState = state;
 };
@@ -75,25 +97,23 @@ Table.prototype.toXML = function () {
   var s = this.ref[0];
   var e = this.ref[1];
   table.setAttribute('ref', util.positionToLetterRef(s[0], s[1]) + ':' + util.positionToLetterRef(e[0], e[1]));
-  
+
   /** TOTALS **/
   table.setAttribute('totalsRowCount', this.totalsRowCount);
-  
+
   /** HEADER **/
   table.setAttribute('headerRowCount', this.headerRowCount);
-  if (this.headerRowDxfId) {
+  if(this.headerRowDxfId) {
     table.setAttribute('headerRowDxfId', this.headerRowDxfId);
   }
-
-  if (this.headerRowBorderDxfId) {
+  if(this.headerRowBorderDxfId) {
     table.setAttribute('headerRowBorderDxfId', this.headerRowBorderDxfId);
   }
 
-  if (!this.ref) {
+  if(!this.ref) {
     throw 'Needs at least a reference range';
   }
-
-  if (!this.autoFilter) {
+  if(!this.autoFilter) {
     this.addAutoFilter(this.ref[0], this.ref[1]);
   }
 
@@ -109,23 +129,20 @@ Table.prototype.exportTableColumns = function (doc) {
   var tableColumns = doc.createElement('tableColumns');
   tableColumns.setAttribute('count', this.tableColumns.length);
   var tcs = this.tableColumns;
-
-  for (var i = 0, l = tcs.length; i < l; i++) {
+  for(var i = 0, l = tcs.length; i < l; i++) {
     var tc = tcs[i];
     var tableColumn = doc.createElement('tableColumn');
     tableColumn.setAttribute('id', i + 1);
     tableColumn.setAttribute('name', tc.name);
     tableColumns.appendChild(tableColumn);
-    
-    if (tc.totalsRowFunction) {
+
+    if(tc.totalsRowFunction) {
       tableColumn.setAttribute('totalsRowFunction', tc.totalsRowFunction);
     }
-
-    if (tc.totalsRowLabel) {
+    if(tc.totalsRowLabel) {
       tableColumn.setAttribute('totalsRowLabel', tc.totalsRowLabel);
     }
   }
-
   return tableColumns;
 };
 
@@ -145,7 +162,6 @@ Table.prototype.exportTableStyleInfo = function (doc) {
   tableStyle.setAttribute('showLastColumn', ts.showLastColumn ? '1' : '0');
   tableStyle.setAttribute('showColumnStripes', ts.showColumnStripes ? '1' : '0');
   tableStyle.setAttribute('showRowStripes', ts.showRowStripes ? '1' : '0');
-
   return tableStyle;
 };
 

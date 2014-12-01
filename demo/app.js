@@ -2,7 +2,6 @@
 
 var express = require('express');
 var excel = require('../index.js');
-var Table = require('../Excel/Table');
 var BasicReport = require('../Template/BasicReport');
 
 var app = express();
@@ -58,22 +57,22 @@ app.get('/table', function(req, res) {
 
   var basicReport = new BasicReport();
   var columns = [
-    {id: 'id', name: "ID", type: 'number', width: 20},
-    {id: 'name', name:"Name", type: 'string', width: 50},
-    {id: 'price', name: "Price", type: 'number', style: basicReport.predefinedFormatters.currency.id},
-    {id: 'location', name: "Location", type: 'string'},
-    {id: 'startDate', name: "Start Date", type: 'date', style: basicReport.predefinedFormatters.date.id, width: 15},
-    {id: 'endDate', name: "End Date", type: 'date', style: basicReport.predefinedFormatters.date.id, width: 15}
+    {id: 'id', name: 'ID', type: 'number', width: 20},
+    {id: 'name', name:'Name', type: 'string', width: 50},
+    {id: 'price', name: 'Price', type: 'number', style: basicReport.predefinedFormatters.currency.id},
+    {id: 'location', name: 'Location', type: 'string'},
+    {id: 'startDate', name: 'Start Date', type: 'date', style: basicReport.predefinedFormatters.date.id, width: 15},
+    {id: 'endDate', name: 'End Date', type: 'date', style: basicReport.predefinedFormatters.date.id, width: 15}
   ];
 
   var worksheetData = [
     [
-      {value: "ID", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
-      {value: "Name", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
-      {value: "Price", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
-      {value: "Location", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
-      {value: "Start Date", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
-      {value: "End Date", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}}
+      {value: 'ID', metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
+      {value: 'Name', metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
+      {value: 'Price', metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
+      {value: 'Location', metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
+      {value: 'Start Date', metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
+      {value: 'End Date', metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}}
     ]
   ].concat(data);
 

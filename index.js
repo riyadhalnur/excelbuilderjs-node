@@ -51,7 +51,7 @@ module.exports = {
   createFile: function (workbook, options) {
     var zip = new JSZip();
     var files = workbook.generateFiles();
-
+    
     _.each(files, function (content, path) {
       path = path.substr(1);
       if (path.indexOf('.xml') !== -1 || path.indexOf('.rel') !== -1) {

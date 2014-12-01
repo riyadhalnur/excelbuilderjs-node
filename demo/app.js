@@ -3,13 +3,12 @@
 var express = require('express');
 var excel = require('../index.js');
 var Table = require('../Excel/Table');
-//var testdata = require('./testdata.json');
+var BasicReport = require('../Template/BasicReport');
+
 var app = express();
 
 app.get('/', function(req, res) {
 
-  //var data = JSON.parse(testdata);
-  //console.log(data);
   var demoWorkbook = excel.createWorkbook();
   var stylesheet = demoWorkbook.getStyleSheet();
 
@@ -54,53 +53,41 @@ app.get('/', function(req, res) {
 });
 
 app.get('/table', function(req, res) {
-  var artistWorkbook = excel.createWorkbook();
-  var stylesheet = artistWorkbook.getStyleSheet();
-  var albumList = artistWorkbook.createWorksheet({name: 'Album List'});
 
-   var themeColor = stylesheet.createFormat({
-    font: {
-      bold: true,
-      color: red
-    }
-  });
+  var data = require('./testdata.json');
 
-  var originalData = [
-    [
-      {value: 'ID', metadata: {style: themeColor.id, type: 'string'}}, 
-      {value: 'Name', metadata: {style: themeColor.id, type: 'string'}}, 
-      {value: 'Number', metadata: {style: themeColor.id, type: 'string'}}, 
-      {value: 'Address', metadata: {style: themeColor.id, type: 'string'}}, 
-      {value: 'Lat', metadata: {style: themeColor.id, type: 'string'}}
-    ]
+  var basicReport = new BasicReport();
+  var columns = [
+    {id: 'id', name: "ID", type: 'number', width: 20},
+    {id: 'name', name:"Name", type: 'string', width: 50},
+    {id: 'price', name: "Price", type: 'number', style: basicReport.predefinedFormatters.currency.id},
+    {id: 'location', name: "Location", type: 'string'},
+    {id: 'startDate', name: "Start Date", type: 'date', style: basicReport.predefinedFormatters.date.id, width: 15},
+    {id: 'endDate', name: "End Date", type: 'date', style: basicReport.predefinedFormatters.date.id, width: 15}
   ];
 
-  var albumTable = new Table();
-  albumTable.styleInfo.themeStyle = "TableStyleDark2";
+  var worksheetData = [
+    [
+      {value: "ID", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
+      {value: "Name", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
+      {value: "Price", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
+      {value: "Location", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
+      {value: "Start Date", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
+      {value: "End Date", metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}}
+    ]
+  ].concat(data);
 
-  artistWorkbook.addWorksheet(albumList);
+  basicReport.setData(worksheetData);
+  basicReport.setColumns(columns);
 
-  albumList.addTable(albumTable);
-  artistWorkbook.addTable(albumTable);
-  
+  var result = excel.createFile(basicReport.prepare());
 
-  //Table columns are required, even if headerRowCount is zero. The name of the column also must match the
-  //data in the column cell that is the header - keep this in mind for localization
-  albumTable.setTableColumns([
-    'Artist',
-    'Album',
-    'Price'
-  ]);
-
-  albumList.setData(originalData);
-  albumTable.setReferenceRange([1, 1], [3, originalData.length]); //X/Y position where the table starts and stops.
-
-  var result = excel.createFile(artistWorkbook);
-  var data = new Buffer(result, 'base64');
+  var base64Out = new Buffer(result, 'base64');
 
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64');
   res.setHeader('Content-Disposition', 'attachment; filename=' + 'demo.xlsx');
-  res.end(data);
+
+  res.end(base64Out);
 });
 
 app.listen(3000);

@@ -28,6 +28,7 @@
   },
   "license": "GPLv3",
   "dependencies": {
+    "underscore": "^1.7.0",
     "jszip": "~2.4.x",
     "xmldom": "~0.1.19",
     "underscore": "^1.7.0"

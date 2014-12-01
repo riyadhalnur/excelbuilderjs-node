@@ -81,20 +81,19 @@ Table.prototype.toXML = function () {
   
   /** HEADER **/
   table.setAttribute('headerRowCount', this.headerRowCount);
-
-  if(this.headerRowDxfId) {
+  if (this.headerRowDxfId) {
     table.setAttribute('headerRowDxfId', this.headerRowDxfId);
   }
 
-  if(this.headerRowBorderDxfId) {
+  if (this.headerRowBorderDxfId) {
     table.setAttribute('headerRowBorderDxfId', this.headerRowBorderDxfId);
   }
 
-  if(!this.ref) {
+  if (!this.ref) {
     throw 'Needs at least a reference range';
   }
 
-  if(!this.autoFilter) {
+  if (!this.autoFilter) {
     this.addAutoFilter(this.ref[0], this.ref[1]);
   }
 
@@ -134,7 +133,7 @@ Table.prototype.exportAutoFilter = function (doc) {
   var autoFilter = doc.createElement('autoFilter');
   var s = this.autoFilter[0];
   var e = this.autoFilter[1];
-  autoFilter.setAttribute('ref', util.positionToLetterRef(s[0], s[1]) + ":" + util.positionToLetterRef(e[0], e[1]  - this.totalsRowCount));
+  autoFilter.setAttribute('ref', util.positionToLetterRef(s[0], s[1]) + ':' + util.positionToLetterRef(e[0], e[1]  - this.totalsRowCount));
   return autoFilter;
 };
 
@@ -142,10 +141,10 @@ Table.prototype.exportTableStyleInfo = function (doc) {
   var ts = this.styleInfo;
   var tableStyle = doc.createElement('tableStyleInfo');
   tableStyle.setAttribute('name', ts.themeStyle);
-  tableStyle.setAttribute('showFirstColumn', ts.showFirstColumn ? "1" : "0");
-  tableStyle.setAttribute('showLastColumn', ts.showLastColumn ? "1" : "0");
-  tableStyle.setAttribute('showColumnStripes', ts.showColumnStripes ? "1" : "0");
-  tableStyle.setAttribute('showRowStripes', ts.showRowStripes ? "1" : "0");
+  tableStyle.setAttribute('showFirstColumn', ts.showFirstColumn ? '1' : '0');
+  tableStyle.setAttribute('showLastColumn', ts.showLastColumn ? '1' : '0');
+  tableStyle.setAttribute('showColumnStripes', ts.showColumnStripes ? '1' : '0');
+  tableStyle.setAttribute('showRowStripes', ts.showRowStripes ? '1' : '0');
 
   return tableStyle;
 };

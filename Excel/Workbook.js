@@ -240,6 +240,7 @@ Workbook.prototype._prepareFilesForPackaging = function (files) {
       var content = files[key].replace(/xmlns=""/g, '');
       content = content.replace(/NS[\d]+:/g, '');
       content = content.replace(/xmlns:NS[\d]+=""/g, '');
+
       files[key] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + "\n" + content;
     }
   });

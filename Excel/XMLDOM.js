@@ -90,7 +90,7 @@ XMLDOM.XMLNode.prototype.toString = function () {
   } else {
     string += "/>";
   }
-
+  
   return string;
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "excelbuilderjs-node",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Node wrapper library for the excelbuilderjs library",
   "main": "index.js",
   "scripts": {
@@ -34,7 +34,8 @@
     "xmldom": "~0.1.19"
   },
   "devDependencies": {
-    "jshint": "~2.5.x",
+    "grunt": "~0.4.5",
+    "grunt-contrib-jshint": "~0.10.0",
     "express": "~3.x",
     "mocha": "^2.0.x",
     "should": "^4.3.x"

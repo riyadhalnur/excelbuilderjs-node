@@ -1,7 +1,7 @@
 {
   "name": "excelbuilderjs-node",
   "version": "0.0.1",
-  "description": "https://github.com/riyadhalnur/excelbuilderjs-node",
+  "description": "A Node wrapper library for the excelbuilderjs library",
   "main": "index.js",
   "scripts": {
     "start": "node demo/app.js",
@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/riyadhalnur/excelbuilderjs-node/issues"
   },
-  "author": "Riyadh Al Nur <riyadhalnur@verticalaxisbd.com>",
+  "author": "Riyadh Al Nur <riyadhalnur@verticalaxisbd.com> (http://blog.verticalaxisbd.com)",
   "contributors": {
     "name": "AKM Zahiduzzaman",
     "email": "zahid@newscred.com"
@@ -29,11 +29,11 @@
   "license": "GPLv3",
   "dependencies": {
     "jszip": "~2.4.x",
-    "xmldom": "~0.1.19"
+    "xmldom": "~0.1.19",
+    "underscore": "^1.7.0"
   },
   "devDependencies": {
     "jshint": "~2.5.x",
-    "underscore": "^1.7.0",
     "express": "~3.x",
     "mocha": "^2.0.x",
     "should": "^4.3.x"

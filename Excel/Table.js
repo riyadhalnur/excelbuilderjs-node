@@ -31,7 +31,7 @@ var Table = function (config) {
 };
 
 Table.prototype.initialize = function (config) {
-  this.displayName = _.uniqueId("Table");
+  this.displayName = _.uniqueId('Table');
   this.name = this.displayName;
   this.id = this.name;
   this.tableId = this.id.replace('Table', '');
@@ -56,7 +56,7 @@ Table.prototype.addTableColumn = function (column) {
   }
 
   if (!column.name) {
-    throw "Invalid argument for addTableColumn - minimum requirement is a name property";
+    throw 'Invalid argument for addTableColumn - minimum requirement is a name property';
   }
 
   this.tableColumns.push(column);
@@ -74,26 +74,27 @@ Table.prototype.toXML = function () {
   table.setAttribute('displayName', this.displayName);
   var s = this.ref[0];
   var e = this.ref[1];
-  table.setAttribute('ref', util.positionToLetterRef(s[0], s[1]) + ":" + util.positionToLetterRef(e[0], e[1]));
+  table.setAttribute('ref', util.positionToLetterRef(s[0], s[1]) + ':' + util.positionToLetterRef(e[0], e[1]));
   
   /** TOTALS **/
   table.setAttribute('totalsRowCount', this.totalsRowCount);
   
   /** HEADER **/
   table.setAttribute('headerRowCount', this.headerRowCount);
-  if (this.headerRowDxfId) {
+
+  if(this.headerRowDxfId) {
     table.setAttribute('headerRowDxfId', this.headerRowDxfId);
   }
 
-  if (this.headerRowBorderDxfId) {
+  if(this.headerRowBorderDxfId) {
     table.setAttribute('headerRowBorderDxfId', this.headerRowBorderDxfId);
   }
 
-  if (!this.ref) {
-    throw "Needs at least a reference range";
+  if(!this.ref) {
+    throw 'Needs at least a reference range';
   }
 
-  if (!this.autoFilter) {
+  if(!this.autoFilter) {
     this.addAutoFilter(this.ref[0], this.ref[1]);
   }
 
@@ -102,7 +103,7 @@ Table.prototype.toXML = function () {
   table.appendChild(this.exportTableColumns(doc));
   table.appendChild(this.exportTableStyleInfo(doc));
 
-  return table;
+  return doc;
 };
 
 Table.prototype.exportTableColumns = function (doc) {

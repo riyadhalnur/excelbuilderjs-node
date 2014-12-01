@@ -67,14 +67,14 @@ Worksheet.prototype.addDrawings = function (table) {
 
 Worksheet.prototype.setHeader = function (headers) {
   if(!_.isArray(headers)) {
-    throw "Invalid argument type - setHeader expects an array of three instructions";
+    throw 'Invalid argument type - setHeader expects an array of three instructions';
   }
   this._headers = headers;
 };
 
 Worksheet.prototype.setFooter = function (footers) {
   if(!_.isArray(footers)) {
-    throw "Invalid argument type - setFooter expects an array of three instructions";
+    throw 'Invalid argument type - setFooter expects an array of three instructions';
   }
   this._footers = footers;
 };
@@ -153,8 +153,7 @@ Worksheet.prototype._buildCache = function (doc) {
   var stringValue = doc.createElement('v');
   stringValue.appendChild(doc.createTextNode("--temp--"));
   stringNode.appendChild(stringValue);
-  
-  
+
   return {
     number: numberNode,
     date: numberNode,
@@ -234,19 +233,19 @@ Worksheet.prototype.toXML = function () {
       }
 
       switch(metadata.type) {
-        case "number":
+        case 'number':
           cell = cellCache.number.cloneNode(true);
           cell.firstChild.firstChild.nodeValue = cellValue;
           break;
-        case "date":
+        case 'date':
           cell = cellCache.date.cloneNode(true);
           cell.firstChild.firstChild.nodeValue = 25569.0 + ((cellValue - this._timezoneOffset)  / (60 * 60 * 24 * 1000));
           break;
-        case "formula":
+        case 'formula':
           cell = cellCache.formula.cloneNode(true);
           cell.firstChild.firstChild.nodeValue = cellValue;
           break;
-        case "text":
+        case 'text':
           /*falls through*/
         default:
           var id;

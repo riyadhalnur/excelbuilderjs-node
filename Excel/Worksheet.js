@@ -14,6 +14,7 @@ var Worksheet = function (config) {
   this._footers = [];
   this._tables = [];
   this._drawings = [];
+  this._rowInstructions = {};
   this.initialize(config);
 };
 
@@ -22,7 +23,7 @@ Worksheet.prototype.initialize = function (config) {
   this.name = config.name;
   this.id = _.uniqueId('Worksheet');
   this._timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
-  if(config.columns) {
+  if (config.columns) {
     this.setColumns(config.columns);
   }
 
@@ -43,6 +44,7 @@ Worksheet.prototype.exportData = function () {
     _headers: this._headers,
     _footers: this._footers,
     _tables: this._tables,
+    _rowInstructions: this._rowInstructions,
     name: this.name,
     id: this.id
   };
@@ -73,6 +75,19 @@ Worksheet.prototype.addDrawings = function (table) {
 };
 
 /**
+ * Expects an object with the following (all optional) properties:
+ * 
+ * * height (number)
+ * * style (a style id)
+ * 
+ * @param {object} instructions An object with row creation instructions
+ * @returns {undefined}
+ */
+Worksheet.prototype.setRowInstructions = function (instructions) {
+  this._rowInstructions = instructions;
+};
+
+/**
  * Expects an array length of three.
  *
  * @see Excel/Worksheet compilePageDetailPiece
@@ -81,7 +96,7 @@ Worksheet.prototype.addDrawings = function (table) {
  * @param {Array} headers [left, center, right]
  */
 Worksheet.prototype.setHeader = function (headers) {
-  if(!_.isArray(headers)) {
+  if (!_.isArray(headers)) {
     throw 'Invalid argument type - setHeader expects an array of three instructions';
   }
   this._headers = headers;
@@ -96,7 +111,7 @@ Worksheet.prototype.setHeader = function (headers) {
  * @param {Array} footers [left, center, right]
  */
 Worksheet.prototype.setFooter = function (footers) {
-  if(!_.isArray(footers)) {
+  if (!_.isArray(footers)) {
     throw 'Invalid argument type - setFooter expects an array of three instructions';
   }
   this._footers = footers;
@@ -124,22 +139,23 @@ Worksheet.prototype.compilePageDetailPackage = function (data) {
  * @returns {String|@exp;_@call;reduce}
  */
 Worksheet.prototype.compilePageDetailPiece = function (data) {
-  if(_.isString(data)) {
+  if (_.isString(data)) {
     return '&"-,Regular"'.concat(data);
   }
-  if(_.isObject(data) && !_.isArray(data)) {
+  if (_.isObject(data) && !_.isArray(data)) {
     var string = '';
-    if(data.font || data.bold) {
+
+    if (data.font || data.bold) {
       var weighting = data.bold ? 'Bold' : 'Regular';
       string += '&"' + (data.font || '-');
       string += ',' + weighting + '"';
     } else {
       string += '&"-,Regular"';
     }
-    if(data.underline) {
+    if (data.underline) {
       string += '&U';
     }
-    if(data.fontSize) {
+    if (data.fontSize) {
       string += '&'+data.fontSize;
     }
     string += data.text;
@@ -147,7 +163,7 @@ Worksheet.prototype.compilePageDetailPiece = function (data) {
     return string;
   }
 
-  if(_.isArray(data)) {
+  if (_.isArray(data)) {
     var self = this;
     return _.reduce(data, function (m, v) {
       return m.concat(self.compilePageDetailPiece(v));
@@ -165,6 +181,7 @@ Worksheet.prototype.compilePageDetailPiece = function (data) {
 Worksheet.prototype.exportHeader = function (doc) {
   var oddHeader = doc.createElement('oddHeader');
   oddHeader.appendChild(doc.createTextNode(this.compilePageDetailPackage(this._headers)));
+
   return oddHeader;
 };
 
@@ -207,7 +224,6 @@ Worksheet.prototype._buildCache = function (doc) {
   stringValue.appendChild(doc.createTextNode('--temp--'));
   stringNode.appendChild(stringValue);
 
-
   return {
     number: numberNode,
     date: numberNode,
@@ -226,29 +242,32 @@ Worksheet.prototype.collectSharedStrings = function () {
   var data = this.data;
   var maxX = 0;
   var strings = {};
-  for(var row = 0, l = data.length; row < l; row++) {
+
+  for (var row = 0, l = data.length; row < l; row++) {
     var dataRow = data[row];
     var cellCount = dataRow.length;
     maxX = cellCount > maxX ? cellCount : maxX;
-    for(var c = 0; c < cellCount; c++) {
+
+    for (var c = 0; c < cellCount; c++) {
       var cellValue = dataRow[c];
       var metadata = cellValue && cellValue.metadata || {};
       if (cellValue && typeof cellValue === 'object') {
         cellValue = cellValue.value;
       }
 
-      if(!metadata.type) {
-        if(typeof cellValue === 'number') {
+      if (!metadata.type) {
+        if (typeof cellValue === 'number') {
           metadata.type = 'number';
         }
       }
-      if(metadata.type === 'text' || !metadata.type) {
-        if(typeof strings[cellValue] === 'undefined') {
+      if (metadata.type === 'text' || !metadata.type) {
+        if (typeof strings[cellValue] === 'undefined') {
           strings[cellValue] = true;
         }
       }
     }
   }
+
   return _.keys(strings);
 };
 
@@ -260,19 +279,19 @@ Worksheet.prototype.toXML = function () {
   var i, l, row;
   worksheet.setAttribute('xmlns:r', util.schemas.relationships);
   worksheet.setAttribute('xmlns:mc', util.schemas.markupCompat);
-
+  
   var maxX = 0;
   var sheetData = util.createElement(doc, 'sheetData');
-
+  
   var cellCache = this._buildCache(doc);
-
-  for(row = 0, l = data.length; row < l; row++) {
+  
+  for (row = 0, l = data.length; row < l; row++) {
     var dataRow = data[row];
     var cellCount = dataRow.length;
     maxX = cellCount > maxX ? cellCount : maxX;
     var rowNode = doc.createElement('row');
-
-    for(var c = 0; c < cellCount; c++) {
+    
+    for (var c = 0; c < cellCount; c++) {
       columns[c] = columns[c] || {};
       var cellValue = dataRow[c];
       var cell, metadata = cellValue && cellValue.metadata || {};
@@ -281,60 +300,79 @@ Worksheet.prototype.toXML = function () {
         cellValue = cellValue.value;
       }
 
-      if(!metadata.type) {
-        if(typeof cellValue === 'number') {
+      if (!metadata.type) {
+        if (typeof cellValue === 'number') {
           metadata.type = 'number';
         }
       }
 
       switch(metadata.type) {
-        case 'number':
+        case "number":
           cell = cellCache.number.cloneNode(true);
           cell.firstChild.firstChild.nodeValue = cellValue;
           break;
-        case 'date':
+        case "date":
           cell = cellCache.date.cloneNode(true);
           cell.firstChild.firstChild.nodeValue = 25569.0 + ((cellValue - this._timezoneOffset)  / (60 * 60 * 24 * 1000));
           break;
-        case 'formula':
+        case "formula":
           cell = cellCache.formula.cloneNode(true);
           cell.firstChild.firstChild.nodeValue = cellValue;
           break;
-        case 'text':
-        /*falls through*/
+        case "text":
+          /*falls through*/
         default:
           var id;
-          if(typeof this.sharedStrings.strings[cellValue] !== 'undefined') {
-            id = this.sharedStrings.strings[cellValue];
+          if (typeof this.sharedStrings.strings[cellValue] !== 'undefined') {
+              id = this.sharedStrings.strings[cellValue];
           } else {
-            id = this.sharedStrings.addString(cellValue);
+              id = this.sharedStrings.addString(cellValue);
           }
           cell = cellCache.string.cloneNode(true);
           cell.firstChild.firstChild.nodeValue = id;
           break;
       }
-      if(metadata.style) {
+
+      if (metadata.style) {
         cell.setAttribute('s', metadata.style);
       }
+
       cell.setAttribute('r', util.positionToLetterRef(c + 1, row + 1));
       rowNode.appendChild(cell);
     }
     rowNode.setAttribute('r', row + 1);
-    sheetData.appendChild(rowNode);
-  }
 
-  if(maxX !== 0) {
+    if (this._rowInstructions) {
+      var rowInst = this._rowInstructions;
+
+      for (var i = 0; i < data.length; i++) {
+        if (rowInst.height !== undefined) {
+          rowNode.setAttribute('customHeight', '1');
+          rowNode.setAttribute('ht', rowInst.height);
+        }
+
+        if (rowInst.style !== undefined) {
+          rowNode.setAttribute('customFormat', '1');
+          rowNode.setAttribute('s', rowInst.style);
+        }
+      }
+    }
+
+    sheetData.appendChild(rowNode);
+  } 
+  
+  if (maxX !== 0) {
     worksheet.appendChild(util.createElement(doc, 'dimension', [
-      ['ref',  util.positionToLetterRef(1, 1) + ':' + util.positionToLetterRef(maxX, data.length)]
+        ['ref',  util.positionToLetterRef(1, 1) + ':' + util.positionToLetterRef(maxX, data.length)]
     ]));
   } else {
     worksheet.appendChild(util.createElement(doc, 'dimension', [
-      ['ref',  util.positionToLetterRef(1, 1)]
+        ['ref',  util.positionToLetterRef(1, 1)]
     ]));
   }
-
-  if(this.columns.length) {
-    worksheet.appendChild(this.exportColumns(doc));
+  
+  if (this.columns.length) {
+     worksheet.appendChild(this.exportColumns(doc));
   }
   worksheet.appendChild(sheetData);
 
@@ -349,38 +387,41 @@ Worksheet.prototype.toXML = function () {
     }
     worksheet.appendChild(mergeCells);
   }
-
+  
   this.exportPageSettings(doc, worksheet);
-
-  if(this._headers.length > 0 || this._footers.length > 0) {
+  
+  if (this._headers.length > 0 || this._footers.length > 0) {
     var headerFooter = doc.createElement('headerFooter');
-    if(this._headers.length > 0) {
+    if (this._headers.length > 0) {
       headerFooter.appendChild(this.exportHeader(doc));
     }
-    if(this._footers.length > 0) {
+
+    if (this._footers.length > 0) {
       headerFooter.appendChild(this.exportFooter(doc));
     }
     worksheet.appendChild(headerFooter);
   }
-
-  if(this._tables.length > 0) {
+  
+  if (this._tables.length > 0) {
     var tables = doc.createElement('tableParts');
     tables.setAttribute('count', this._tables.length);
-    for(i = 0, l = this._tables.length; i < l; i++) {
-      var table = doc.createElement('tablePart');
-      table.setAttribute('r:id', this.relations.getRelationshipId(this._tables[i]));
-      tables.appendChild(table);
+
+    for (i = 0, l = this._tables.length; i < l; i++) {
+        var table = doc.createElement('tablePart');
+        table.setAttribute('r:id', this.relations.getRelationshipId(this._tables[i]));
+        tables.appendChild(table);
     }
     worksheet.appendChild(tables);
   }
 
   // the 'drawing' element should be written last, after 'headerFooter', 'mergeCells', etc. due
   // to issue with Microsoft Excel (2007, 2013)
-  for(i = 0, l = this._drawings.length; i < l; i++) {
+  for (i = 0, l = this._drawings.length; i < l; i++) {
     var drawing = doc.createElement('drawing');
     drawing.setAttribute('r:id', this.relations.getRelationshipId(this._drawings[i]));
     worksheet.appendChild(drawing);
   }
+
   return doc;
 };
 
@@ -391,22 +432,26 @@ Worksheet.prototype.toXML = function () {
  */
 Worksheet.prototype.exportColumns = function (doc) {
   var cols = util.createElement(doc, 'cols');
-  for(var i = 0, l = this.columns.length; i < l; i++) {
+  for (var i = 0, l = this.columns.length; i < l; i++) {
     var cd = this.columns[i];
     var col = util.createElement(doc, 'col', [
       ['min', cd.min || i + 1],
       ['max', cd.max || i + 1]
     ]);
+
     if (cd.hidden) {
       col.setAttribute('hidden', 1);
     }
-    if(cd.bestFit) {
+
+    if (cd.bestFit) {
       col.setAttribute('bestFit', 1);
     }
-    if(cd.customWidth || cd.width) {
+
+    if (cd.customWidth || cd.width) {
       col.setAttribute('customWidth', 1);
     }
-    if(cd.width) {
+
+    if (cd.width) {
       col.setAttribute('width', cd.width);
     } else {
       col.setAttribute('width', 9.140625);
@@ -414,6 +459,7 @@ Worksheet.prototype.exportColumns = function (doc) {
 
     cols.appendChild(col);
   }
+
   return cols;
 };
 
@@ -425,7 +471,6 @@ Worksheet.prototype.exportColumns = function (doc) {
  * @returns {undefined}
  */
 Worksheet.prototype.exportPageSettings = function (doc, worksheet) {
-
   if(this._orientation) {
     worksheet.appendChild(util.createElement(doc, 'pageSetup', [
       ['orientation', this._orientation]

@@ -145,9 +145,11 @@ StyleSheet.prototype.createDifferentialStyle = function (styleInstructions) {
   var style = {
     id: id
   };
-  if(styleInstructions.font && _.isObject(styleInstructions.font)) {
+
+  if (styleInstructions.font && _.isObject(styleInstructions.font)) {
     style.font = styleInstructions.font;
   }
+
   if (styleInstructions.border && _.isObject(styleInstructions.border)) {
     style.border = _.defaults(styleInstructions.border, {
       top: {},
@@ -157,16 +159,21 @@ StyleSheet.prototype.createDifferentialStyle = function (styleInstructions) {
       diagonal: {}
     });
   }
+
   if (styleInstructions.fill && _.isObject(styleInstructions.fill)) {
     style.fill = styleInstructions.fill;
   }
+
   if (styleInstructions.alignment && _.isObject(styleInstructions.alignment)) {
     style.alignment = styleInstructions.alignment;
   }
+
   if (styleInstructions.format && _.isString(styleInstructions.format)) {
     style.numFmt = styleInstructions.format;
   }
+
   this.differentialStyles[id] = style;
+
   return style;
 };
 
@@ -184,21 +191,21 @@ StyleSheet.prototype.createTableStyle = function (instructions) {
 /**
  * All params optional
  * Expects: {
-        * top: {},
-        * left: {},
-        * right: {},
-        * bottom: {},
-        * diagonal: {},
-        * outline: boolean,
-        * diagonalUp: boolean,
-        * diagonalDown: boolean
-        * }
- * Each border should follow:
- * {
-        * style: styleString, http://www.schemacentral.com/sc/ooxml/t-ssml_ST_BorderStyle.html
-        * color: ARBG color (requires the A, so for example FF006666)
-        * }
- * @param {Object} border
+  * top: {},
+  * left: {},
+  * right: {},
+  * bottom: {},
+  * diagonal: {},
+  * outline: boolean,
+  * diagonalUp: boolean,
+  * diagonalDown: boolean
+  * }
+  * Each border should follow:
+  * {
+  * style: styleString, http://www.schemacentral.com/sc/ooxml/t-ssml_ST_BorderStyle.html
+  * color: ARBG color (requires the A, so for example FF006666)
+  * }
+  * @param {Object} border
  */
 StyleSheet.prototype.createBorderFormatter = function (border) {
   _.defaults(border, {
@@ -235,20 +242,25 @@ StyleSheet.prototype.createFontStyle = function (instructions) {
   var fontStyle = {
     id: fontId
   };
-  if(instructions.bold) {
+
+  if (instructions.bold) {
     fontStyle.bold = true;
   }
-  if(instructions.italic) {
+
+  if (instructions.italic) {
     fontStyle.italic = true;
   }
-  if(instructions.superscript) {
+
+  if (instructions.superscript) {
     fontStyle.vertAlign = 'superscript';
   }
-  if(instructions.subscript) {
+
+  if (instructions.subscript) {
     fontStyle.vertAlign = 'subscript';
   }
+
   if(instructions.underline) {
-    if(_.indexOf([
+    if (_.indexOf([
       'double',
       'singleAccounting',
       'doubleAccounting'
@@ -258,25 +270,33 @@ StyleSheet.prototype.createFontStyle = function (instructions) {
       fontStyle.underline = true;
     }
   }
-  if(instructions.strike) {
+
+  if (instructions.strike) {
     fontStyle.strike = true;
   }
-  if(instructions.outline) {
+
+  if (instructions.outline) {
     fontStyle.outline = true;
   }
-  if(instructions.shadow) {
+
+  if (instructions.shadow) {
     fontStyle.shadow = true;
   }
-  if(instructions.size) {
+
+  if (instructions.size) {
     fontStyle.size = instructions.size;
   }
-  if(instructions.color) {
+
+  if (instructions.color) {
     fontStyle.color = instructions.color;
   }
-  if(instructions.fontName) {
+
+  if (instructions.fontName) {
     fontStyle.fontName = instructions.fontName;
   }
+
   this.fonts.push(fontStyle);
+
   return fontStyle;
 };
 
@@ -284,9 +304,10 @@ StyleSheet.prototype.exportBorders = function (doc) {
   var borders = doc.createElement('borders');
   borders.setAttribute('count', this.borders.length);
 
-  for(var i = 0, l = this.borders.length; i < l; i++) {
+  for (var i = 0, l = this.borders.length; i < l; i++) {
     borders.appendChild(this.exportBorder(doc, this.borders[i]));
   }
+
   return borders;
 };
 
@@ -295,25 +316,28 @@ StyleSheet.prototype.exportBorder = function (doc, data) {
   var self = this;
   var borderGenerator = function (name) {
     var b = doc.createElement(name);
-    if(data[name].style) {
+    if (data[name].style) {
       b.setAttribute('style', data[name].style);
     }
-    if(data[name].color) {
+    if (data[name].color) {
       b.appendChild(self.exportColor(doc, data[name].color));
     }
+
     return b;
   };
+
   border.appendChild(borderGenerator('left'));
   border.appendChild(borderGenerator('right'));
   border.appendChild(borderGenerator('top'));
   border.appendChild(borderGenerator('bottom'));
   border.appendChild(borderGenerator('diagonal'));
+
   return border;
 };
 
 StyleSheet.prototype.exportColor = function (doc, color) {
   var colorEl = doc.createElement('color');
-  if(_.isString(color)) {
+  if (_.isString(color)) {
     colorEl.setAttribute('rgb', color);
     return colorEl;
   }
@@ -321,9 +345,11 @@ StyleSheet.prototype.exportColor = function (doc, color) {
   if (!_.isUndefined(color.tint)) {
     colorEl.setAttribute('tint', color.tint);
   }
+
   if (!_.isUndefined(color.auto)) {
     colorEl.setAttribute('auto', !!color.auto);
   }
+
   if (!_.isUndefined(color.theme)) {
     colorEl.setAttribute('theme', color.theme);
   }
@@ -335,10 +361,11 @@ StyleSheet.prototype.exportMasterCellFormats = function (doc) {
   var cellFormats = util.createElement(doc, 'cellXfs', [
     ['count', this.masterCellFormats.length]
   ]);
-  for(var i = 0, l = this.masterCellFormats.length; i < l; i++) {
+  for (var i = 0, l = this.masterCellFormats.length; i < l; i++) {
     var mformat = this.masterCellFormats[i];
     cellFormats.appendChild(this.exportCellFormatElement(doc, mformat));
   }
+
   return cellFormats;
 };
 
@@ -346,10 +373,12 @@ StyleSheet.prototype.exportMasterCellStyles = function (doc) {
   var records = util.createElement(doc, 'cellStyleXfs', [
     ['count', this.masterCellStyles.length]
   ]);
-  for(var i = 0, l = this.masterCellStyles.length; i < l; i++) {
+
+  for (var i = 0, l = this.masterCellStyles.length; i < l; i++) {
     var mstyle = this.masterCellStyles[i];
     records.appendChild(this.exportCellFormatElement(doc, mstyle));
   }
+
   return records;
 };
 
@@ -358,103 +387,122 @@ StyleSheet.prototype.exportCellFormatElement = function (doc, styleInstructions)
   var allowed = ['applyAlignment', 'applyBorder', 'applyFill', 'applyFont', 'applyNumberFormat',
     'applyProtection', 'borderId', 'fillId', 'fontId', 'numFmtId', 'pivotButton', 'quotePrefix', 'xfId'];
   var attributes = _.filter(_.keys(styleInstructions), function (key) {
-    if(_.indexOf(allowed, key) !== -1) {
+    if (_.indexOf(allowed, key) !== -1) {
       return true;
     }
   });
-  if(styleInstructions.alignment) {
+
+  if (styleInstructions.alignment) {
     var alignmentData = styleInstructions.alignment;
     xf.appendChild(this.exportAlignment(doc, alignmentData));
   }
+
   var a = attributes.length;
   while(a--) {
     xf.setAttribute(attributes[a], styleInstructions[attributes[a]]);
   }
-  if(styleInstructions.fillId) {
+
+  if (styleInstructions.fillId) {
     xf.setAttribute('applyFill', '1');
   }
+
   return xf;
 };
 
 StyleSheet.prototype.exportAlignment = function (doc, alignmentData) {
   var alignment = doc.createElement('alignment');
   var keys = _.keys(alignmentData);
-  for(var i = 0, l = keys.length; i < l; i++) {
+
+  for (var i = 0, l = keys.length; i < l; i++) {
     alignment.setAttribute(keys[i], alignmentData[keys[i]]);
   }
+
   return alignment;
 };
 
 StyleSheet.prototype.exportFonts = function (doc) {
   var fonts = doc.createElement('fonts');
   fonts.setAttribute('count', this.fonts.length);
-  for(var i = 0, l = this.fonts.length; i < l; i++) {
+
+  for (var i = 0, l = this.fonts.length; i < l; i++) {
     var fd = this.fonts[i];
     fonts.appendChild(this.exportFont(doc, fd));
   }
+
   return fonts;
 };
 
 StyleSheet.prototype.exportFont = function (doc, fd) {
   var font = doc.createElement('font');
-  if(fd.size) {
+
+  if (fd.size) {
     var size = doc.createElement('sz');
     size.setAttribute('val', fd.size);
     font.appendChild(size);
   }
 
-  if(fd.fontName) {
+  if (fd.fontName) {
     var fontName = doc.createElement('name');
     fontName.setAttribute('val', fd.fontName);
     font.appendChild(fontName);
   }
 
-  if(fd.bold) {
+  if (fd.bold) {
     font.appendChild(doc.createElement('b'));
   }
-  if(fd.italic) {
+  if (fd.italic) {
     font.appendChild(doc.createElement('i'));
   }
-  if(fd.vertAlign) {
+
+  if (fd.vertAlign) {
     var vertAlign = doc.createElement('vertAlign');
     vertAlign.setAttribute('val', fd.vertAlign);
     font.appendChild(vertAlign);
   }
-  if(fd.underline) {
+
+  if (fd.underline) {
     var u = doc.createElement('u');
-    if(fd.underline !== true) {
+    if (fd.underline !== true) {
       u.setAttribute('val', fd.underline);
     }
     font.appendChild(u);
   }
-  if(fd.strike) {
+
+  if (fd.strike) {
     font.appendChild(doc.createElement('strike'));
   }
-  if(fd.shadow) {
+
+  if (fd.shadow) {
     font.appendChild(doc.createElement('shadow'));
   }
-  if(fd.outline) {
+
+  if (fd.outline) {
     font.appendChild(doc.createElement('outline'));
   }
-  if(fd.color) {
+
+  if (fd.color) {
     font.appendChild(this.exportColor(doc, fd.color));
   }
+
   return font;
 };
 
 StyleSheet.prototype.exportFills = function (doc) {
   var fills = doc.createElement('fills');
   fills.setAttribute('count', this.fills.length);
-  for(var i = 0, l = this.fills.length; i < l; i++) {
+
+  for (var i = 0, l = this.fills.length; i < l; i++) {
     var fd = this.fills[i];
     fills.appendChild(this.exportFill(doc, fd));
   }
+
   return fills;
 };
 
 StyleSheet.prototype.exportFill = function (doc, fd) {
   var fillDef;
   var fill = doc.createElement('fill');
+
   if (fd.type === 'pattern') {
     fillDef = this.exportPatternFill(doc, fd);
     fill.appendChild(fillDef);
@@ -462,12 +510,14 @@ StyleSheet.prototype.exportFill = function (doc, fd) {
     fillDef = this.exportGradientFill(doc, fd);
     fill.appendChild(fillDef);
   }
+
   return fill;
 };
 
 StyleSheet.prototype.exportGradientFill = function (doc, data) {
   var fillDef = doc.createElement('gradientFill');
-  if(data.degree) {
+
+  if (data.degree) {
     fillDef.setAttribute('degree', data.degree);
   } else if (data.left) {
     fillDef.setAttribute('left', data.left);
@@ -475,9 +525,11 @@ StyleSheet.prototype.exportGradientFill = function (doc, data) {
     fillDef.setAttribute('top', data.top);
     fillDef.setAttribute('bottom', data.bottom);
   }
+
   var start = doc.createElement('stop');
   start.setAttribute('position', data.start.pureAt || 0);
   var startColor = doc.createElement('color');
+
   if (typeof data.start === 'string' || data.start.color) {
     startColor.setAttribute('rgb', data.start.color || data.start);
   } else if (typeof data.start.theme) {
@@ -487,15 +539,18 @@ StyleSheet.prototype.exportGradientFill = function (doc, data) {
   var end = doc.createElement('stop');
   var endColor = doc.createElement('color');
   end.setAttribute('position', data.end.pureAt || 1);
+
   if (typeof data.start === 'string' || data.end.color) {
     endColor.setAttribute('rgb', data.end.color || data.end);
   } else if (typeof data.end.theme) {
     endColor.setAttribute('theme', data.end.theme);
   }
+
   start.appendChild(startColor);
   end.appendChild(endColor);
   fillDef.appendChild(start);
   fillDef.appendChild(end);
+
   return fillDef;
 };
 
@@ -508,18 +563,19 @@ StyleSheet.prototype.exportPatternFill = function (doc, data) {
   var fillDef = util.createElement(doc, 'patternFill', [
     ['patternType', data.patternType]
   ]);
-  if(!data.bgColor) {
+
+  if (!data.bgColor) {
     data.bgColor = 'FFFFFFFF';
   }
-  if(!data.fgColor) {
+  if (!data.fgColor) {
     data.fgColor = 'FFFFFFFF';
   }
 
   var bgColor = doc.createElement('bgColor');
-  if(_.isString(data.bgColor)) {
+  if (_.isString(data.bgColor)) {
     bgColor.setAttribute('rgb', data.bgColor);
   } else {
-    if(data.bgColor.theme) {
+    if (data.bgColor.theme) {
       bgColor.setAttribute('theme', data.bgColor.theme);
     } else {
       bgColor.setAttribute('rgb', data.bgColor.rbg);
@@ -527,27 +583,31 @@ StyleSheet.prototype.exportPatternFill = function (doc, data) {
   }
 
   var fgColor = doc.createElement('fgColor');
-  if(_.isString(data.fgColor)) {
+  if (_.isString(data.fgColor)) {
     fgColor.setAttribute('rgb', data.fgColor);
   } else {
-    if(data.fgColor.theme) {
+    if (data.fgColor.theme) {
       fgColor.setAttribute('theme', data.fgColor.theme);
     } else {
       fgColor.setAttribute('rgb', data.fgColor.rbg);
     }
   }
+
   fillDef.appendChild(fgColor);
   fillDef.appendChild(bgColor);
+
   return fillDef;
 };
 
 StyleSheet.prototype.exportNumberFormatters = function (doc) {
   var formatters = doc.createElement('numFmts');
   formatters.setAttribute('count', this.numberFormatters.length);
-  for(var i = 0, l = this.numberFormatters.length; i < l; i++) {
+
+  for (var i = 0, l = this.numberFormatters.length; i < l; i++) {
     var fd = this.numberFormatters[i];
     formatters.appendChild(this.exportNumberFormatter(doc, fd));
   }
+
   return formatters;
 };
 
@@ -562,7 +622,7 @@ StyleSheet.prototype.exportCellStyles = function (doc) {
   var cellStyles = doc.createElement('cellStyles');
   cellStyles.setAttribute('count', this.cellStyles.length);
 
-  for(var i = 0, l = this.cellStyles.length; i < l; i++) {
+  for (var i = 0, l = this.cellStyles.length; i < l; i++) {
     var style = this.cellStyles[i];
     delete style.id; //Remove internal id
     var record = util.createElement(doc, 'cellStyle');
@@ -581,7 +641,7 @@ StyleSheet.prototype.exportDifferentialStyles = function (doc) {
   var dxfs = doc.createElement('dxfs');
   dxfs.setAttribute('count', this.differentialStyles.length);
 
-  for(var i = 0, l = this.differentialStyles.length; i < l; i++) {
+  for (var i = 0, l = this.differentialStyles.length; i < l; i++) {
     var style = this.differentialStyles[i];
     dxfs.appendChild(this.exportDFX(doc, style));
   }
@@ -591,33 +651,41 @@ StyleSheet.prototype.exportDifferentialStyles = function (doc) {
 
 StyleSheet.prototype.exportDFX = function (doc, style) {
   var dxf = doc.createElement('dxf');
-  if(style.font) {
+  if (style.font) {
     dxf.appendChild(this.exportFont(doc, style.font));
   }
-  if(style.fill) {
+
+  if (style.fill) {
     dxf.appendChild(this.exportFill(doc, style.fill));
   }
-  if(style.border) {
+
+  if (style.border) {
     dxf.appendChild(this.exportBorder(doc, style.border));
   }
-  if(style.numFmt) {
+
+  if (style.numFmt) {
     dxf.appendChild(this.exportNumberFormatter(doc, style.numFmt));
   }
-  if(style.alignment) {
+
+  if (style.alignment) {
     dxf.appendChild(this.exportAlignment(doc, style.alignment));
   }
+
   return dxf;
 };
 
 StyleSheet.prototype.exportTableStyles = function (doc) {
   var tableStyles = doc.createElement('tableStyles');
   tableStyles.setAttribute('count', this.tableStyles.length);
-  if(this.defaultTableStyle) {
+
+  if (this.defaultTableStyle) {
     tableStyles.setAttribute('defaultTableStyle', this.defaultTableStyle);
   }
-  for(var i = 0, l = this.tableStyles.length; i < l; i++) {
+
+  for (var i = 0, l = this.tableStyles.length; i < l; i++) {
     tableStyles.appendChild(this.exportTableStyle(doc, this.tableStyles[i]));
   }
+
   return tableStyles;
 };
 
@@ -628,14 +696,16 @@ StyleSheet.prototype.exportTableStyle = function (doc, style) {
   var i = 0;
 
   _.each(style, function (value, key) {
-    if(key === 'name') {return;}
+    if (key === 'name') {return;}
     i++;
     var styleEl = doc.createElement('tableStyleElement');
     styleEl.setAttribute('type', key);
     styleEl.setAttribute('dxfId', value);
     tableStyle.appendChild(styleEl);
   });
+
   tableStyle.setAttribute('count', i);
+
   return tableStyle;
 };
 
@@ -650,9 +720,11 @@ StyleSheet.prototype.toXML = function () {
   styleSheet.appendChild(this.exportMasterCellFormats(doc));
   styleSheet.appendChild(this.exportCellStyles(doc));
   styleSheet.appendChild(this.exportDifferentialStyles(doc));
-  if(this.tableStyles.length) {
+
+  if (this.tableStyles.length) {
     styleSheet.appendChild(this.exportTableStyles(doc));
   }
+  
   return doc;
 };
 

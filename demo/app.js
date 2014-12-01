@@ -3,6 +3,7 @@
 var express = require('express');
 var app = express();
 var path = require('path');
+var testData = require('./testdata.json');
 
 var Excel = require('../index.js');
 var Drawings = require('../Excel/Drawings');
@@ -39,9 +40,13 @@ app.get('/', function(req, res) {
       {value: 'Address', metadata: {style: themeColor.id, type: 'string'}}, 
       {value: 'Lat', metadata: {style: themeColor.id, type: 'string'}}
     ]
-  ];
+  ].concat(testData);
 
   var demoList = demoWorkbook.createWorksheet({name: 'Demo List'});
+
+  demoList.setRowInstructions({
+    height: 20
+  });
 
   demoList.setData(worksheetData);
   demoList.setColumns(columns);
@@ -58,7 +63,7 @@ app.get('/', function(req, res) {
 
 app.get('/table', function(req, res) {
 
-  var data = require('./testdata.json');
+  
 
   var basicReport = new BasicReport();
   var columns = [
@@ -79,7 +84,7 @@ app.get('/table', function(req, res) {
       {value: 'Start Date', metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}},
       {value: 'End Date', metadata: {style: basicReport.predefinedFormatters.header.id, type: 'string'}}
     ]
-  ].concat(data);
+  ].concat(testData);
 
   basicReport.setData(worksheetData);
   basicReport.setColumns(columns);

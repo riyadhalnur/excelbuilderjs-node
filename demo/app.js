@@ -5,7 +5,6 @@ var app = express();
 var path = require('path');
 
 var Excel = require('../index.js');
-var Table = require('../Excel/Table');
 var Drawings = require('../Excel/Drawings');
 var Picture = require('../Excel/Drawing/Picture');
 var Positioning = require('../Excel/Positioning');
@@ -101,7 +100,7 @@ app.get('/image', function(req, res) {
   var stylesheet = catWorkbook.getStyleSheet();
 
   var drawings = new Drawings();
-  var catImageData = util.base64_encode(path.resolve(__dirname, 'grumpycat.jpg'));
+  var catImageData = util.base64Encode(path.resolve(__dirname, 'grumpycat.jpg'));
 
   var picRef = catWorkbook.addMedia('image', 'grumpycat.jpg', catImageData);
 
@@ -134,7 +133,7 @@ app.get('/image', function(req, res) {
   var catPicture3 = new Picture();
   catPicture3.createAnchor('oneCellAnchor', {
     x: 1,
-    y: 4,
+    y: 1,
     width: Positioning.pixelsToEMUs(300),
     height: Positioning.pixelsToEMUs(300)
   });
@@ -143,15 +142,18 @@ app.get('/image', function(req, res) {
   drawings.addDrawing(catPicture3);
 
   catList.addDrawings(drawings);
+
   catWorkbook.addDrawings(drawings);
   catWorkbook.addWorksheet(catList);
 
   console.log(catWorkbook.generateFiles());
+
   var data = Excel.createFile(catWorkbook);
+  var result = new Buffer(data, 'base64');
 
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64');
   res.setHeader('Content-Disposition', 'attachment; filename=' + 'demo.xlsx');
-  res.end(data);
+  res.end(result);
 });
 
 

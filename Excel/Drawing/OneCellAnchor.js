@@ -24,14 +24,15 @@ var OneCellAnchor = function (config) {
     this.setDimensions(config.width, config.height);
   }
 };
+
 OneCellAnchor.prototype.setPos = function (x, y, xOff, yOff) {
   this.x = x;
   this.y = y;
 
-  if(xOff !== undefined) {
+  if (xOff !== undefined) {
     this.xOff = xOff;
   }
-  if(yOff !== undefined) {
+  if (yOff !== undefined) {
     this.yOff = yOff;
   }
 };
@@ -67,7 +68,8 @@ OneCellAnchor.prototype.toXML = function (xmlDoc, content) {
   root.appendChild(content);
 
   root.appendChild(util.createElement(xmlDoc, 'xdr:clientData'));
-  
+
   return root;
 };
+
 module.exports = OneCellAnchor;

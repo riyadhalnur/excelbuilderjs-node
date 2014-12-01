@@ -50,7 +50,7 @@ Workbook.prototype.addDrawings = function (drawings) {
 Workbook.prototype.addMedia = function (type, fileName, fileData, contentType) {
   var fileNamePieces = fileName.split('.');
   var extension = fileNamePieces[fileNamePieces.length - 1];
-  
+
   if(!contentType) {
     switch(extension.toLowerCase()) {
       case 'jpeg':
@@ -254,7 +254,6 @@ Workbook.prototype.generateFiles = function () {
   var files = {};
   this._generateCorePaths(files);
 
-
   for(var i = 0, l = this.worksheets.length; i < l; i++) {
     files['/xl/worksheets/sheet' + (i + 1) + '.xml'] = this.worksheets[i].toXML();
     Paths[this.worksheets[i].id] = 'worksheets/sheet' + (i + 1) + '.xml';
@@ -265,6 +264,5 @@ Workbook.prototype.generateFiles = function () {
 
   return files;
 };
-
 
 module.exports = Workbook;

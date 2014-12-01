@@ -17,11 +17,12 @@ var AbsoluteAnchor = function (config) {
   this.width = null;
   this.height = null;
 
-  if(config) {
+  if (config) {
     this.setPos(config.x, config.y);
     this.setDimensions(config.width, config.height);
   }
 };
+
 /**
  * Sets the X and Y offsets.
  *
@@ -61,6 +62,7 @@ AbsoluteAnchor.prototype.toXML = function (xmlDoc, content) {
   root.appendChild(content);
 
   root.appendChild(util.createElement(xmlDoc, 'xdr:clientData'));
+
   return root;
 };
 

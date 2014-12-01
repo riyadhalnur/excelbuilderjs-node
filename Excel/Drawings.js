@@ -28,6 +28,7 @@ Drawings.prototype.toXML = function () {
   var doc = util.createXmlDoc(util.schemas.spreadsheetDrawing, 'xdr:wsDr');
   var drawings = doc.documentElement;
   drawings.setAttribute('xmlns:a', util.schemas.drawing);
+  drawings.setAttribute('xmlns:xdr', util.schemas.spreadsheetDrawing);
 
   for(var i = 0, l = this.drawings.length; i < l; i++) {
 
@@ -38,6 +39,7 @@ Drawings.prototype.toXML = function () {
     this.drawings[i].setRelationshipId(rId);
     drawings.appendChild(this.drawings[i].toXML(doc));
   }
+
   return doc;
 };
 

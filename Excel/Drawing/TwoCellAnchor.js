@@ -14,7 +14,7 @@ var TwoCellAnchor = function (config) {
   this.from = {xOff: 0, yOff: 0};
   this.to = {xOff: 0, yOff: 0};
 
-  if(config) {
+  if (config) {
     this.setFrom(config.from.x, config.from.y, config.to.xOff, config.to.yOff);
     this.setTo(config.to.x, config.to.y, config.to.xOff, config.to.yOff);
   }
@@ -24,11 +24,11 @@ TwoCellAnchor.prototype.setFrom = function (x, y, xOff, yOff) {
   this.from.x = x;
   this.from.y = y;
 
-  if(xOff !== undefined) {
+  if (xOff !== undefined) {
     this.from.xOff = xOff;
   }
 
-  if(yOff !== undefined) {
+  if (yOff !== undefined) {
     this.from.yOff = xOff;
   }
 };
@@ -37,11 +37,11 @@ TwoCellAnchor.prototype.setTo = function (x, y, xOff, yOff) {
   this.to.x = x;
   this.to.y = y;
 
-  if(xOff !== undefined) {
+  if (xOff !== undefined) {
     this.to.xOff = xOff;
   }
 
-  if(yOff !== undefined) {
+  if (yOff !== undefined) {
     this.to.yOff = xOff;
   }
 };
@@ -79,14 +79,13 @@ TwoCellAnchor.prototype.toXML = function (xmlDoc, content) {
   to.appendChild(toRow);
   to.appendChild(toRowOff);
 
-
   root.appendChild(from);
   root.appendChild(to);
 
   root.appendChild(content);
 
   root.appendChild(util.createElement(xmlDoc, 'xdr:clientData'));
-  
+
   return root;
 };
 

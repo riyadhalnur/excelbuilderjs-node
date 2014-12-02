@@ -1,11 +1,49 @@
 'use strict';
 
 var _ = require('underscore');
-var Workbook = require('./Excel/Workbook');
-var Worker = require('./Excel/ZipWorker');
 var JSZip = require('jszip');
 
+var Drawings = require('./Excel/Drawings');
+var Paths = require('./Excel/Paths');
+var Positioning = require('./Excel/Positioning');
+var RelationshipManager = require('./Excel/RelationshipManager');
+var SharedStrings = require('./Excel/SharedStrings');
+var StyleSheet = require('./Excel/StyleSheet');
+var Table = require('./Excel/Table');
+var util = require('./Excel/util');
+var Workbook = require('./Excel/Workbook');
+var Worksheet = require('./Excel/Worksheet');
+//var WorksheetExportWorker = require('./Excel/WorksheetExportWorker');
+var XMLDOM = require('./Excel/XMLDOM');
+//var Worker = require('./Excel/ZipWorker');
+
+var AbsoluteAnchor = require('./Excel/Drawing/AbsoluteAnchor');
+var Chart  = require('./Excel/Drawing/Chart');
+var Drawing = require('./Excel/Drawing/Drawing');
+var OneCellAnchor = require('./Excel/Drawing/OneCellAnchor');
+var Picture = require('./Excel/Drawing/Picture');
+var TwoCellAnchor = require('./Excel/Drawing/TwoCellAnchor');
+
 module.exports = {
+  Drawings: Drawings,
+  Paths: Paths,
+  Positioning: Positioning,
+  RelationshipManager: RelationshipManager,
+  SharedStrings: SharedStrings,
+  StyleSheet: StyleSheet,
+  Table: Table,
+  util: util,
+  Worksheet: Worksheet,
+  //WorksheetExportWorker: WorksheetExportWorker,
+  XMLDOM: XMLDOM,
+
+  AbsoluteAnchor: AbsoluteAnchor,
+  Chart: Chart,
+  Drawing: Drawing,
+  OneCellAnchor: OneCellAnchor,
+  Picture: Picture,
+  TwoCellAnchor: TwoCellAnchor,
+  
   /**
    * Creates a new workbook.
    */

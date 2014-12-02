@@ -6,14 +6,13 @@ var path = require('path');
 var testData = require('./testdata.json');
 
 var Excel = require('../index.js');
-var Drawings = require('../Excel/Drawings');
-var Picture = require('../Excel/Drawing/Picture');
-var Positioning = require('../Excel/Positioning');
-var util = require('../Excel/util');
+// var Drawings = require('../Excel/Drawings');
+// var Picture = require('../Excel/Drawing/Picture');
+// var Positioning = require('../Excel/Positioning');
+// var util = require('../Excel/util');
 var BasicReport = require('../Template/BasicReport');
 
 app.get('/', function(req, res) {
-
   var demoWorkbook = Excel.createWorkbook();
   var stylesheet = demoWorkbook.getStyleSheet();
 
@@ -62,9 +61,6 @@ app.get('/', function(req, res) {
 });
 
 app.get('/table', function(req, res) {
-
-  
-
   var basicReport = new BasicReport();
   var columns = [
     {id: 'id', name: 'ID', type: 'number', width: 20},
@@ -104,12 +100,12 @@ app.get('/image', function(req, res) {
   var catList = catWorkbook.createWorksheet({name: 'Cat List'});
   var stylesheet = catWorkbook.getStyleSheet();
 
-  var drawings = new Drawings();
-  var catImageData = util.base64Encode(path.resolve(__dirname, 'grumpycat.jpg'));
+  var drawings = new Excel.Drawings();
+  var catImageData = Excel.util.base64Encode(path.resolve(__dirname, 'grumpycat.jpg'));
 
   var picRef = catWorkbook.addMedia('image', 'grumpycat.jpg', catImageData);
 
-  var catPicture1 = new Picture();
+  var catPicture1 = new Excel.Picture();
   catPicture1.createAnchor('twoCellAnchor', {
     from: {
       x: 0,
@@ -124,23 +120,23 @@ app.get('/image', function(req, res) {
   catPicture1.setMedia(picRef);
   drawings.addDrawing(catPicture1);
 
-  var catPicture2 = new Picture();
+  var catPicture2 = new Excel.Picture();
   catPicture2.createAnchor('absoluteAnchor', {
-    x: Positioning.pixelsToEMUs(300),
-    y: Positioning.pixelsToEMUs(300),
-    width: Positioning.pixelsToEMUs(300),
-    height: Positioning.pixelsToEMUs(300)
+    x: Excel.Positioning.pixelsToEMUs(300),
+    y: Excel.Positioning.pixelsToEMUs(300),
+    width: Excel.Positioning.pixelsToEMUs(300),
+    height: Excel.Positioning.pixelsToEMUs(300)
   });
 
   catPicture2.setMedia(picRef);
   drawings.addDrawing(catPicture2);
 
-  var catPicture3 = new Picture();
+  var catPicture3 = new Excel.Picture();
   catPicture3.createAnchor('oneCellAnchor', {
     x: 1,
     y: 1,
-    width: Positioning.pixelsToEMUs(300),
-    height: Positioning.pixelsToEMUs(300)
+    width: Excel.Positioning.pixelsToEMUs(300),
+    height: Excel.Positioning.pixelsToEMUs(300)
   });
 
   catPicture3.setMedia(picRef);
@@ -160,7 +156,6 @@ app.get('/image', function(req, res) {
   res.setHeader('Content-Disposition', 'attachment; filename=' + 'demo.xlsx');
   res.end(result);
 });
-
 
 app.listen(3000);
 console.log('Listening on port 3000');

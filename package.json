@@ -1,6 +1,6 @@
 {
   "name": "excelbuilderjs-node",
-  "version": "0.0.4",
+  "version": "0.0.41",
   "description": "A Node wrapper library for the excelbuilderjs library",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,10 @@
     "excel",
     "xlsx",
     "export",
-    "node"
+    "node",
+    "javascript",
+    "js",
+    "office"
   ],
   "bugs": {
     "url": "https://github.com/riyadhalnur/excelbuilderjs-node/issues"

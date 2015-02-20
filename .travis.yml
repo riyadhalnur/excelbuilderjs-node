@@ -8,6 +8,12 @@ notifications:
   email:
     on_success: always
     on_failure: always
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/9aab0383e1844d25db65
+    on_success: always
+    on_failure: never
+    on_start: false
 branches:
   only:
     - master

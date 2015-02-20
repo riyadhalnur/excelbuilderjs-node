@@ -3,6 +3,8 @@
 excelbuilderjs-node
 ===================
 
+[![Join the chat at https://gitter.im/riyadhalnur/excelbuilderjs-node](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/riyadhalnur/excelbuilderjs-node?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A Node wrapper library for the [excelbuilderjs](http://excelbuilderjs.com) library by [Stephen Liberty](https://github.com/stephenliberty).  
 
 ### Installation  

@@ -83,8 +83,8 @@ Worksheet.prototype.addDrawings = function (table) {
  * @param {object} instructions An object with row creation instructions
  * @returns {undefined}
  */
-Worksheet.prototype.setRowInstructions = function (instructions) {
-  this._rowInstructions = instructions;
+Worksheet.prototype.setRowInstructions = function (rowIndex, instructions) {
+  this._rowInstructions[rowIndex] = instructions;
 };
 
 /**
@@ -342,8 +342,8 @@ Worksheet.prototype.toXML = function () {
     }
     rowNode.setAttribute('r', row + 1);
 
-    if (this._rowInstructions) {
-      var rowInst = this._rowInstructions;
+    if (this._rowInstructions[row]) {
+      var rowInst = this._rowInstructions[row];
 
       for (var i = 0; i < data.length; i++) {
         if (rowInst.height !== undefined) {

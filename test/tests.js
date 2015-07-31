@@ -88,4 +88,25 @@ describe('Excel builder library', function () {
     });
   });
 
+  describe('Worksheet', function () {
+    describe('setRowInstruction', function () {
+      it('should accept an object to set default', function () {
+        should.fail();
+      });
+
+      it('should accept a number and an object to override a row', function () {
+        should.fail();
+      });
+    });
+
+    describe('toXML', function () {
+      it('should use default row instruction for rows without override', function () {
+        should.fail();
+      });
+
+      it('should use proper row instruction for rows that have one', function () {
+        should.fail();
+      });
+    });
+  });
 });

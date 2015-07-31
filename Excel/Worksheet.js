@@ -345,16 +345,14 @@ Worksheet.prototype.toXML = function () {
     if (this._rowInstructions[row]) {
       var rowInst = this._rowInstructions[row];
 
-      for (var i = 0; i < data.length; i++) {
-        if (rowInst.height !== undefined) {
-          rowNode.setAttribute('customHeight', '1');
-          rowNode.setAttribute('ht', rowInst.height);
-        }
+      if (rowInst.height !== undefined) {
+        rowNode.setAttribute('customHeight', '1');
+        rowNode.setAttribute('ht', rowInst.height);
+      }
 
-        if (rowInst.style !== undefined) {
-          rowNode.setAttribute('customFormat', '1');
-          rowNode.setAttribute('s', rowInst.style);
-        }
+      if (rowInst.style !== undefined) {
+        rowNode.setAttribute('customFormat', '1');
+        rowNode.setAttribute('s', rowInst.style);
       }
     }
 

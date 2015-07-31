@@ -80,11 +80,15 @@ Worksheet.prototype.addDrawings = function (table) {
  * * height (number)
  * * style (a style id)
  * 
+ * @param {number} rowIndex specify row number (0 indexed) to apply the instructions to (optional; when not present, the default is set instead)
  * @param {object} instructions An object with row creation instructions
  * @returns {undefined}
  */
 Worksheet.prototype.setRowInstructions = function (rowIndex, instructions) {
-  this._rowInstructions[rowIndex] = instructions;
+  if (_.isObject(rowIndex) && (instructions === undefined))
+    this._rowInstructions.default = rowIndex;
+  else
+    this._rowInstructions[rowIndex] = instructions;
 };
 
 /**
@@ -342,8 +346,8 @@ Worksheet.prototype.toXML = function () {
     }
     rowNode.setAttribute('r', row + 1);
 
-    if (this._rowInstructions[row]) {
-      var rowInst = this._rowInstructions[row];
+    if (this._rowInstructions[row] || this._rowInstructions.default) {
+      var rowInst = this._rowInstructions[row] || this._rowInstructions.default;
 
       if (rowInst.height !== undefined) {
         rowNode.setAttribute('customHeight', '1');

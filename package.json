@@ -30,7 +30,7 @@
     "email": "zhd.zmn@gmail.com",
     "url": "http://www.zahiduzzaman.com"
   },
-  "license": "GPLv3",
+  "license": "MIT",
   "dependencies": {
     "underscore": "^1.7.0",
     "jszip": "~2.4.x",

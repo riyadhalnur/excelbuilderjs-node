@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/riyadhalnur/excelbuilderjs-node.svg)](https://travis-ci.org/riyadhalnur/excelbuilderjs-node)  [![npm version](https://badge.fury.io/js/excelbuilderjs-node.svg)](http://badge.fury.io/js/excelbuilderjs-node)
+[![Build Status](https://travis-ci.org/riyadhalnur/excelbuilderjs-node.svg)](https://travis-ci.org/riyadhalnur/excelbuilderjs-node) [![Build status](https://ci.appveyor.com/api/projects/status/l6qfn0kofqore2le/branch/master?svg=true)](https://ci.appveyor.com/project/riyadhalnur/excelbuilderjs-node/branch/master) [![npm version](https://badge.fury.io/js/excelbuilderjs-node.svg)](http://badge.fury.io/js/excelbuilderjs-node)
 
 excelbuilderjs-node
 ===================

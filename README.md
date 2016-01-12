@@ -22,7 +22,7 @@ or
 [API Documentation](http://excelbuilderjs.com/documentation.html)  
 
 ### License  
-This library is released under the GPL v3 license. Read the LICENSE.md file for more information  
+Licened under MIT. Read the LICENSE file for more information  
 
 ### Contributors  
 [Riyadh Al Nur](http://blog.verticalaxisbd.com) and [AKM Zahiduzzaman](http://www.zahiduzzaman.com)  

@@ -22,7 +22,7 @@ or
 [API Documentation](http://excelbuilderjs.com/documentation.html)  
 
 ### License  
-Licened under MIT. Read the LICENSE file for more information  
+Licensed under MIT. Read the LICENSE file for more information  
 
 ### Contributors  
 [Riyadh Al Nur](http://blog.verticalaxisbd.com) and [AKM Zahiduzzaman](http://www.zahiduzzaman.com)  

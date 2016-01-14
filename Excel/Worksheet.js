@@ -80,11 +80,15 @@ Worksheet.prototype.addDrawings = function (table) {
  * * height (number)
  * * style (a style id)
  * 
+ * @param {number} rowIndex specify row number (0 indexed) to apply the instructions to (optional; when not present, the default is set instead)
  * @param {object} instructions An object with row creation instructions
  * @returns {undefined}
  */
-Worksheet.prototype.setRowInstructions = function (instructions) {
-  this._rowInstructions = instructions;
+Worksheet.prototype.setRowInstructions = function (rowIndex, instructions) {
+  if (_.isObject(rowIndex) && (instructions === undefined))
+    this._rowInstructions.default = rowIndex;
+  else
+    this._rowInstructions[rowIndex] = instructions;
 };
 
 /**
@@ -342,19 +346,17 @@ Worksheet.prototype.toXML = function () {
     }
     rowNode.setAttribute('r', row + 1);
 
-    if (this._rowInstructions) {
-      var rowInst = this._rowInstructions;
+    if (this._rowInstructions[row] || this._rowInstructions.default) {
+      var rowInst = this._rowInstructions[row] || this._rowInstructions.default;
 
-      for (var i = 0; i < data.length; i++) {
-        if (rowInst.height !== undefined) {
-          rowNode.setAttribute('customHeight', '1');
-          rowNode.setAttribute('ht', rowInst.height);
-        }
+      if (rowInst.height !== undefined) {
+        rowNode.setAttribute('customHeight', '1');
+        rowNode.setAttribute('ht', rowInst.height);
+      }
 
-        if (rowInst.style !== undefined) {
-          rowNode.setAttribute('customFormat', '1');
-          rowNode.setAttribute('s', rowInst.style);
-        }
+      if (rowInst.style !== undefined) {
+        rowNode.setAttribute('customFormat', '1');
+        rowNode.setAttribute('s', rowInst.style);
       }
     }
 

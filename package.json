@@ -33,7 +33,7 @@
   "license": "MIT",
   "dependencies": {
     "underscore": "^1.7.0",
-    "jszip": "~2.4.x",
+    "jszip": "~3.7.0",
     "xmldom": "~0.5.0"
   },
   "devDependencies": {
